@@ -3,7 +3,7 @@ export function getHeaderHTML() {
     return `
     <nav class="nav">
         <div class="nav-left">
-            <a href="../mainpage.html">Home</a>
+            <a href="../index.html.html">Home</a>
             <a href="../mainpage.html">Pizza Places</a>
             <a href="../dealspage.html">Deals</a>
             <a href="../challengespage.html">Challenges</a>
