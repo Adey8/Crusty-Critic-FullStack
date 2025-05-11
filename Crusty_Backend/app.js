@@ -52,7 +52,18 @@ app.use('/api/pizza-types', auth, pizzaTypeRoutes);
 app.use('/api/pizza-place-toppings', auth, pizzaPlaceToppingsRoutes);
 app.use('/api/participate', auth, participateRoutes);
 app.use('/api/challenges', auth, challengesRoutes);
-
+//a test route to check if the server is running
+app.get('/api', (req, res) => {
+  res.status(200).json({ message: 'Server is running!' });
+});
+// Sync database and create tables if they don't exist
+db.sequelize.sync({ force: false })
+  .then(() => {
+    console.log('Database & tables created!');
+  })
+  .catch(err => {
+    console.error('Error syncing database:', err);
+  });
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error details:', {
