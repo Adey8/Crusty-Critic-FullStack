@@ -349,6 +349,7 @@
 
   <script type="module">
     import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+    import { baseUrl } from './config.js';
     
     // Add header styles
     const styleSheet = document.createElement('style');
@@ -420,7 +421,7 @@
         submitBtn.textContent = 'Submitting...';
 
         try {
-          const response = await fetch('http://localhost:3000/api/reviews', {
+          const response = await fetch(`${baseUrl}/reviews`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -454,7 +455,7 @@
     async function loadUserReviews() {
       try {
         const authToken = localStorage.getItem('authToken');
-        const response = await fetch('http://localhost:3000/api/reviews', {
+        const response = await fetch(`${baseUrl}/reviews`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -500,7 +501,7 @@
     async function editReview(reviewId) {
       try {
         const authToken = localStorage.getItem('authToken');
-        const response = await fetch(`http://localhost:3000/api/reviews/${reviewId}`, {
+        const response = await fetch(`${baseUrl}/reviews/${reviewId}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }
@@ -540,7 +541,7 @@
           }
 
           try {
-            const updateResponse = await fetch(`http://localhost:3000/api/reviews/${reviewId}`, {
+            const updateResponse = await fetch(`${baseUrl}/reviews/${reviewId}`, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
@@ -574,7 +575,7 @@
     async function loadAllReviews() {
       try {
         const authToken = localStorage.getItem('authToken');
-        const response = await fetch('http://localhost:3000/api/reviews', {
+        const response = await fetch(`${baseUrl}/reviews`, {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }

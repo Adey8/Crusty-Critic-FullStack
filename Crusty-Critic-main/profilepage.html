@@ -430,6 +430,7 @@
 
   <script type="module">
     import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+    import { baseUrl } from './config.js';
     
     // Add header styles
     const styleSheet = document.createElement('style');
@@ -461,7 +462,7 @@
 
       try {
         // Fetch user profile data
-        const response = await fetch('http://127.0.0.1:3000/api/auth/me', {
+        const response = await fetch(`${baseUrl}/auth/me`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${authToken}`
@@ -546,7 +547,7 @@
 
         try {
           console.log('Sending update request with data:', formData);
-          const response = await fetch('http://127.0.0.1:3000/api/auth/me', {
+          const response = await fetch(`${baseUrl}/auth/me`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

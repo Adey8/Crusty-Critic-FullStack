@@ -112,6 +112,7 @@
 
     <script type="module">
         import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+        import { baseUrl } from './config.js';
         // Add header styles
         const styleSheet = document.createElement('style');
         styleSheet.textContent = headerStyles;
@@ -139,7 +140,7 @@
                 loginBtn.disabled = true;
                 errorMessage.style.display = 'none';
                 try {
-                    const response = await fetch('http://localhost:3000/api/auth/login', {
+                    const response = await fetch(`${baseUrl}/auth/login`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

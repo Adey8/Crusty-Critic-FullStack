@@ -603,6 +603,7 @@
   </footer>
 
   <!-- Add Google Maps API -->
+  <!--
   <script>
     // Use Google Places API to show all pizza places in New York
     window.initMap = function() {
@@ -673,10 +674,12 @@
       // loadPizzaPlacesFromDatabase(map);
     };
   </script>
+  -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARR7nOKqhg3FL1S8vJO2FimKDtyVIwum4&callback=initMap&libraries=places" async defer></script>
 
   <script type="module">
     import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+    import { baseUrl } from './config.js';
     
     // Add header styles
     const styleSheet = document.createElement('style');
@@ -755,7 +758,7 @@
         // Fetch and display reviews
         try {
           const token = localStorage.getItem('authToken');
-          const response = await fetch(`http://localhost:3000/api/reviews/${place.id}`, {
+          const response = await fetch(`${baseUrl}/reviews/${place.id}`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -843,7 +846,7 @@
       async function loadPizzaPlaces() {
         const token = localStorage.getItem('authToken');
         try {
-          const response = await fetch('http://localhost:3000/api/pizzaplaces/search', {
+          const response = await fetch(`${baseUrl}/pizzaplaces/search`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -933,7 +936,7 @@
       if (selectedRating) queryParams.append('rating', selectedRating);
 
       try {
-        const response = await fetch(`http://localhost:3000/api/pizzaplaces/search?${queryParams}`, {
+        const response = await fetch(`${baseUrl}/pizzaplaces/search?${queryParams}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -989,7 +992,7 @@
     async function fetchAndDisplayAllPizzaPlaces() {
       const token = localStorage.getItem('authToken');
       try {
-        const response = await fetch('http://localhost:3000/api/pizzaplaces', {
+        const response = await fetch(`${baseUrl}/pizzaplaces`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -1011,7 +1014,7 @@
     async function fetchAndDisplaySearchedPizzaPlaces(query) {
       const token = localStorage.getItem('authToken');
       try {
-        const url = `http://localhost:3000/api/pizzaplaces/search?query=${encodeURIComponent(query)}`;
+        const url = `${baseUrl}/pizzaplaces/search?query=${encodeURIComponent(query)}`;
         const response = await fetch(url, {
           headers: {
             'Authorization': `Bearer ${token}`

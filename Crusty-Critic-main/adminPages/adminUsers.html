@@ -80,6 +80,7 @@
     <script type="module">
         import { getHeaderHTML, headerStyles, initializeHeader, logout } from '../modules/adminHeader.js';
         import adminSidebar from '../modules/adminSidebar.js';
+        import { baseUrl } from '../config.js';
         // Add header styles
         const styleSheet = document.createElement('style');
         styleSheet.textContent = headerStyles;
@@ -101,7 +102,7 @@
             const authToken = localStorage.getItem('authToken');
             const usersTableContainer = document.getElementById('usersTableContainer');
             try {
-                const response = await fetch('http://localhost:3000/api/admin/users', {
+                const response = await fetch(`${baseUrl}/admin/users`, {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
                 if (!response.ok) throw new Error('Failed to fetch users');

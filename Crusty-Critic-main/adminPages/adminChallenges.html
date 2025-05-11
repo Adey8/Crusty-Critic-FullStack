@@ -166,6 +166,7 @@
     <script type="module">
         import { getHeaderHTML, headerStyles, initializeHeader, logout } from '../modules/adminHeader.js';
         import adminSidebar from '../modules/adminSidebar.js';
+        import { baseUrl } from '../config.js';
 
         // Add header styles
         const styleSheet = document.createElement('style');
@@ -195,7 +196,7 @@
                     return;
                 }
 
-                const response = await fetch('http://localhost:3000/api/challenges', {
+                const response = await fetch(`${baseUrl}/challenges`, {
                     headers: {
                         'Authorization': `Bearer ${authToken}`
                     }
@@ -259,7 +260,7 @@
                     endDate: form.endDate.value
                 };
 
-                const response = await fetch('http://localhost:3000/api/challenges', {
+                const response = await fetch(`${baseUrl}/challenges`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -173,9 +173,7 @@
     <script type="module">
         import { getHeaderHTML, headerStyles, initializeHeader, logout } from '../modules/adminHeader.js';
         import adminSidebar from '../modules/adminSidebar.js';
-
-        // Backend API configuration
-        const baseUrl = 'http://localhost:3000/api';
+        import { baseUrl } from '../config.js';
 
         // Helper function to get auth headers
         function getAuthHeaders() {

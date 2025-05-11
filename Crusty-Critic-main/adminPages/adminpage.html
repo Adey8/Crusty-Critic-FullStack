@@ -87,6 +87,7 @@
   <script type="module">
     import { getHeaderHTML, headerStyles, initializeHeader, logout } from '../modules/adminHeader.js';
     import adminSidebar from '../modules/adminSidebar.js';
+    import { baseUrl } from '../config.js';
     // Add header styles
     const styleSheet = document.createElement('style');
     styleSheet.textContent = headerStyles;
@@ -106,9 +107,9 @@
       const authToken = localStorage.getItem('authToken');
       try {
         const [usersRes, reviewsRes, listingsRes] = await Promise.all([
-          fetch('http://localhost:3000/api/admin/users', { headers: { 'Authorization': `Bearer ${authToken}` } }),
-          fetch('http://localhost:3000/api/reviews', { headers: { 'Authorization': `Bearer ${authToken}` } }),
-          fetch('http://localhost:3000/api/listings', { headers: { 'Authorization': `Bearer ${authToken}` } })
+          fetch(`${baseUrl}/admin/users`, { headers: { 'Authorization': `Bearer ${authToken}` } }),
+          fetch(`${baseUrl}/reviews`, { headers: { 'Authorization': `Bearer ${authToken}` } }),
+          fetch(`${baseUrl}/listings`, { headers: { 'Authorization': `Bearer ${authToken}` } })
         ]);
         const users = usersRes.ok ? await usersRes.json() : [];
         const reviews = reviewsRes.ok ? await reviewsRes.json() : [];

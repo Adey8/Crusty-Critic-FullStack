@@ -24,6 +24,7 @@
     <script type="module">
         import { getHeaderHTML, headerStyles, initializeHeader, logout } from '../modules/adminHeader.js';
         import adminSidebar from '../modules/adminSidebar.js';
+        import { baseUrl } from '../config.js';
         // Add header styles
         const styleSheet = document.createElement('style');
         styleSheet.textContent = headerStyles;

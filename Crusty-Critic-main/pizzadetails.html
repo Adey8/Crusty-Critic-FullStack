@@ -242,6 +242,7 @@
 
     <script type="module">
         import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+        import { baseUrl } from './config.js';
         
         // Add header styles
         const styleSheet = document.createElement('style');
@@ -277,7 +278,7 @@
 
             try {
                 // Fetch pizza place details
-                const response = await fetch(`http://localhost:3000/api/pizzaplaces/${pizzaPlaceId}`, {
+                const response = await fetch(`${baseUrl}/pizzaplaces/${pizzaPlaceId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -294,7 +295,7 @@
                 displayPizzaPlaceDetails(pizzaPlace);
 
                 // Fetch reviews
-                const reviewsResponse = await fetch(`http://localhost:3000/api/reviews/pizzaplace/${pizzaPlaceId}`, {
+                const reviewsResponse = await fetch(`${baseUrl}/reviews/pizzaplace/${pizzaPlaceId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -382,4 +383,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
