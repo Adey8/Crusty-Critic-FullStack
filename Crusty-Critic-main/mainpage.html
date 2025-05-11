@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crusty Critic - Pizza Places</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #F8E0A1;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-left {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav a {
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 8px 15px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav a:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .nav button {
+      background: none;
+      border: none;
+      color: #007bff;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 15px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav button:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .nav .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav .user-info .profile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+
+    .nav .user-info .profile-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .nav .user-info a {
+      color: #007bff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .wrapper {
+      display: flex;
+      height: calc(100vh - 90px); /* header + footer height approx */
+      max-width: 100vw;
+      margin: 0;
+      padding: 0;
+      gap: 0;
+    }
+
+    .sidebar {
+      width: 340px;
+      min-width: 260px;
+      max-width: 400px;
+      background: #fffbe8;
+      border-right: 2px solid #f8e0a1;
+      box-shadow: 2px 0 12px rgba(248, 224, 161, 0.08);
+      padding: 32px 24px 24px 24px;
+      height: 100%;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: 0;
+      background: #f8f9fa;
+      position: relative;
+      z-index: 1;
+    }
+
+    .results {
+      display: none; /* Hide results cards for now, focus on map */
+    }
+
+    .map-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 400px;
+      border-radius: 0 0 0 0;
+      overflow: hidden;
+      box-shadow: none;
+      margin: 0;
+      position: relative;
+    }
+
+    @media (max-width: 900px) {
+      .wrapper {
+        flex-direction: column;
+        height: auto;
+      }
+      .sidebar {
+        width: 100vw;
+        max-width: 100vw;
+        min-width: 0;
+        border-right: none;
+        border-bottom: 2px solid #f8e0a1;
+        box-shadow: 0 2px 12px rgba(248, 224, 161, 0.08);
+        padding: 20px 10px;
+        height: auto;
+        position: static;
+      }
+      .main-content {
+        min-width: 0;
+        width: 100vw;
+        height: 60vh;
+      }
+      .map-container {
+        min-height: 300px;
+        height: 60vh;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .sidebar {
+        padding: 10px 4px;
+      }
+      .main-content {
+        height: 40vh;
+      }
+      .map-container {
+        min-height: 200px;
+        height: 40vh;
+      }
+    }
+
+    /* Sidebar filter styles (improved visual distinction) */
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 26px;
+      color: #b8860b;
+      text-align: center;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f8e0a1;
+      margin-bottom: 25px;
+      letter-spacing: 1px;
+    }
+    .filter-group h3 {
+      color: #b8860b;
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .filter-option {
+      background: #fff6d6;
+      border: 1px solid #f8e0a1;
+      margin-bottom: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s;
+    }
+    .filter-option:hover {
+      background: #f8e0a1;
+    }
+    .filter-option label {
+      color: #333;
+      font-size: 15px;
+      flex: 1;
+    }
+    .filter-count {
+      background: #f8e0a1;
+      color: #b8860b;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    .search-container {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid #f8e0a1;
+      border-radius: 8px;
+      font-size: 15px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      background: #fffbe8;
+      color: #333;
+    }
+    .search-input:focus {
+      border-color: #b8860b;
+      outline: none;
+      box-shadow: 0 0 0 2px #f8e0a1;
+    }
+    .search-btn {
+      width: 100%;
+      padding: 10px;
+      background: #f8e0a1;
+      color: #b8860b;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .search-btn:hover {
+      background: #ffe7a0;
+    }
+    .clear-filters {
+      width: 100%;
+      padding: 8px;
+      background: none;
+      color: #b8860b;
+      border: 1px solid #f8e0a1;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+    .clear-filters:hover {
+      background: #fff6d6;
+    }
+
+    .pizza-list {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .pizza-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .pizza-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .pizza-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .pizza-info {
+      padding: 20px;
+    }
+
+    .pizza-name {
+      font-size: 22px;
+      font-weight: bold;
+      color: #333;
+      margin: 0 0 10px 0;
+    }
+
+    .pizza-rating {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #28a745;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .pizza-description {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .pizza-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .pizza-price {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .pizza-location {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .footer {
+      background-color: #F8E0A1;
+      text-align: center;
+      padding: 30px 0;
+      margin-top: auto;
+    }
+
+    .footer img {
+      width: 120px;
+      height: auto;
+      margin-top: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .footer img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      position: relative;
+      background-color: #fff;
+      margin: 50px auto;
+      padding: 20px;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f8e0a1;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      color: #b8860b;
+      margin: 0;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #666;
+      cursor: pointer;
+      padding: 5px;
+      transition: color 0.3s;
+    }
+
+    .close-modal:hover {
+      color: #b8860b;
+    }
+
+    .modal-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .place-details {
+      padding: 20px;
+      background: #fffbe8;
+      border-radius: 8px;
+    }
+
+    .place-reviews {
+      padding: 20px;
+      background: #fffbe8;
+      border-radius: 8px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .review-item {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .review-author {
+      font-weight: bold;
+      color: #b8860b;
+    }
+
+    .review-date {
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    .review-rating {
+      color: #28a745;
+      margin-bottom: 10px;
+    }
+
+    .review-content {
+      color: #333;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .modal-body {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header"></div>
+  
+  <!-- Add Modal HTML -->
+  <div id="pizzaModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="place-details" id="placeDetails">
+          <!-- Place details will be inserted here -->
+        </div>
+        <div class="place-reviews" id="placeReviews">
+          <!-- Reviews will be inserted here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrapper">
+    <div class="sidebar">
+      <h2>Filters</h2>
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search for pizza places…">
+        <button class="search-btn">Search</button>
+      </div>
+      <div id="pizza-list" class="pizza-list"></div>
+      <div class="filter-group">
+        <h3>📏 Crust Type</h3>
+        <div class="filter-options">
+          <div class="filter-option">
+            <input type="checkbox" id="thin-crust">
+            <label for="thin-crust">Thin Crust</label>
+            <span class="filter-count">24</span>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="thick-crust">
+            <label for="thick-crust">Thick Crust</label>
+            <span class="filter-count">18</span>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="wood-fired">
+            <label for="wood-fired">Wood-Fired</label>
+            <span class="filter-count">12</span>
+          </div>
+        </div>
+      </div>
+      <div class="filter-group">
+        <h3>🌱 Dietary Options</h3>
+        <div class="filter-options">
+          <div class="filter-option">
+            <input type="checkbox" id="gluten-free">
+            <label for="gluten-free">Gluten-Free</label>
+            <span class="filter-count">15</span>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="vegan">
+            <label for="vegan">Vegan Options</label>
+            <span class="filter-count">8</span>
+          </div>
+        </div>
+      </div>
+      <div class="filter-group">
+        <h3>⭐ Rating</h3>
+        <div class="filter-options">
+          <div class="filter-option">
+            <input type="checkbox" id="rating-5">
+            <label for="rating-5">5 Stars</label>
+            <span class="filter-count">6</span>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="rating-4">
+            <label for="rating-4">4+ Stars</label>
+            <span class="filter-count">22</span>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="rating-3">
+            <label for="rating-3">3+ Stars</label>
+            <span class="filter-count">35</span>
+          </div>
+        </div>
+      </div>
+      <button class="clear-filters">Clear All Filters</button>
+    </div>
+    <div class="main-content">
+      <div class="results">
+        <div class="empty">Nothing to show</div>
+      </div>
+      <div class="map-container" id="map" style="height: 600px; width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Crusty Critic Capstone Project<br>
+    <img src="CrustyCriticLogo.png" alt="Crusty Critic Logo">
+  </footer>
+
+  <!-- Add Google Maps API -->
+  <script>
+    // Use Google Places API to show all pizza places in New York
+    window.initMap = function() {
+      // Center on New York
+      const newYork = { lat: 43.0000, lng: -75.0000 };
+      const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 7,
+        center: newYork,
+        styles: [
+          {
+            "featureType": "poi",
+            "elementType": "labels",
+            "stylers": [{ "visibility": "off" }]
+          }
+        ],
+        restriction: {
+          latLngBounds: {
+            north: 45.01585,   // Northernmost point of NY
+            south: 40.477399,  // Southernmost point of NY
+            west: -79.76259,   // Westernmost point of NY
+            east: -71.856214   // Easternmost point of NY
+          },
+          strictBounds: true
+        }
+      });
+
+      // Use PlacesService to search for pizza places
+      const service = new google.maps.places.PlacesService(map);
+      const request = {
+        location: newYork,
+        radius: 350000, // ~350km radius to cover New York
+        keyword: 'pizza'
+      };
+
+      service.nearbySearch(request, function(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          results.forEach(place => {
+            if (place.geometry && place.geometry.location) {
+              const marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location,
+                title: place.name
+              });
+
+              const infoWindow = new google.maps.InfoWindow({
+                content: `
+                  <div style="padding: 10px;">
+                    <h3 style="margin: 0 0 5px 0;">${place.name}</h3>
+                    <p style="margin: 0;">${place.vicinity || ''}</p>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name + ' ' + (place.vicinity || ''))}" target="_blank">
+                      View on Google Maps
+                    </a>
+                  </div>
+                `
+              });
+
+              marker.addListener('click', () => {
+                infoWindow.open(map, marker);
+              });
+            }
+          });
+        } else {
+          alert('No pizza places found or Places API error: ' + status);
+        }
+      });
+
+      // If you want to keep your own database markers, uncomment below:
+      // loadPizzaPlacesFromDatabase(map);
+    };
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARR7nOKqhg3FL1S8vJO2FimKDtyVIwum4&callback=initMap&libraries=places" async defer></script>
+
+  <script type="module">
+    import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+    
+    // Add header styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = headerStyles;
+    document.head.appendChild(styleSheet);
+    
+    // Add header HTML
+    document.getElementById('header').innerHTML = getHeaderHTML();
+    
+    // Initialize header
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeHeader();
+    });
+    
+    // Make logout function globally available
+    window.logout = logout;
+    
+    // Initialize map
+    window.initMap = function() {
+      // Center on New York
+      const newYork = { lat: 43.0000, lng: -75.0000 };
+      const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 7,
+        center: newYork,
+        styles: [
+          {
+            "featureType": "poi",
+            "elementType": "labels",
+            "stylers": [{ "visibility": "off" }]
+          }
+        ],
+        restriction: {
+          latLngBounds: {
+            north: 45.01585,
+            south: 40.477399,
+            west: -79.76259,
+            east: -71.856214
+          },
+          strictBounds: true
+        }
+      });
+
+      // Function to show pizza place details in modal
+      window.showPizzaPlaceDetails = async function(place) {
+        console.log('Showing details for place:', place); // Debug log
+        const modal = document.getElementById('pizzaModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const placeDetails = document.getElementById('placeDetails');
+        const placeReviews = document.getElementById('placeReviews');
+
+        // Set modal title
+        modalTitle.textContent = place.name;
+
+        // Set place details
+        placeDetails.innerHTML = `
+          <div style="margin-bottom: 20px;">
+            <div style="color: #28a745; font-weight: bold; margin-bottom: 10px;">
+              ${place.rating ? '⭐ ' + place.rating.toFixed(1) : 'No rating yet'}
+            </div>
+            <p style="color: #666; margin: 5px 0;">
+              <i class="fas fa-map-marker-alt"></i> ${place.address || 'Address not available'}
+            </p>
+            ${place.description ? `
+              <p style="color: #555; margin: 10px 0;">
+                ${place.description}
+              </p>
+            ` : ''}
+          </div>
+          <button onclick="window.location.href='reviewpage.html?pizzaPlaceId=${place.id}'" 
+                  style="background: #F8E0A1; border: none; padding: 10px 20px; 
+                         border-radius: 4px; cursor: pointer; color: #b8860b; font-weight: bold;">
+            Write a Review
+          </button>
+        `;
+
+        // Fetch and display reviews
+        try {
+          const token = localStorage.getItem('authToken');
+          const response = await fetch(`http://localhost:3000/api/reviews/${place.id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (response.ok) {
+            const reviews = await response.json();
+            if (reviews.length > 0) {
+              placeReviews.innerHTML = reviews.map(review => `
+                <div class="review-item">
+                  <div class="review-header">
+                    <span class="review-author">${review.username || 'Anonymous'}</span>
+                    <span class="review-date">${new Date(review.created_at).toLocaleDateString()}</span>
+                  </div>
+                  <div class="review-rating">${'⭐'.repeat(review.rating)}</div>
+                  <div class="review-content">${review.content}</div>
+                </div>
+              `).join('');
+            } else {
+              placeReviews.innerHTML = '<p style="text-align: center; color: #666;">No reviews yet. Be the first to review!</p>';
+            }
+          } else {
+            placeReviews.innerHTML = '<p style="text-align: center; color: #666;">Error loading reviews. Please try again later.</p>';
+          }
+        } catch (error) {
+          console.error('Error fetching reviews:', error);
+          placeReviews.innerHTML = '<p style="text-align: center; color: #666;">Error loading reviews. Please try again later.</p>';
+        }
+
+        // Show modal
+        modal.style.display = 'block';
+      };
+
+      // Add markers for pizza places
+      function addPizzaPlaceMarker(place) {
+        if (place.latitude && place.longitude) {
+          const marker = new google.maps.Marker({
+            position: { lat: place.latitude, lng: place.longitude },
+            map: map,
+            title: place.name,
+            icon: {
+              url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+              scaledSize: new google.maps.Size(32, 32)
+            },
+            label: {
+              text: place.name,
+              color: "#333333",
+              fontSize: "12px",
+              fontWeight: "bold"
+            }
+          });
+
+          // Add click listener to marker
+          marker.addListener('click', () => {
+            window.showPizzaPlaceDetails(place);
+          });
+
+          // Add hover effects
+          marker.addListener('mouseover', () => {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+          });
+
+          marker.addListener('mouseout', () => {
+            marker.setAnimation(null);
+          });
+
+          return marker;
+        }
+      }
+
+      // Close modal when clicking the close button
+      document.querySelector('.close-modal').addEventListener('click', () => {
+        document.getElementById('pizzaModal').style.display = 'none';
+      });
+
+      // Close modal when clicking outside
+      window.addEventListener('click', (event) => {
+        const modal = document.getElementById('pizzaModal');
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+
+      // Load pizza places and add markers
+      async function loadPizzaPlaces() {
+        const token = localStorage.getItem('authToken');
+        try {
+          const response = await fetch('http://localhost:3000/api/pizzaplaces/search', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (response.status === 401) {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            window.location.href = 'loginpage.html';
+            return;
+          }
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          
+          // Check if data is an array
+          if (!Array.isArray(data)) {
+            console.error('Expected array of pizza places, got:', data);
+            return;
+          }
+
+          // Clear existing markers
+          if (window.markers) {
+            window.markers.forEach(marker => marker.setMap(null));
+          }
+          window.markers = [];
+
+          // Add markers for each pizza place
+          data.forEach(place => {
+            const marker = addPizzaPlaceMarker(place);
+            if (marker) {
+              window.markers.push(marker);
+            }
+          });
+
+          // Fit map bounds to show all markers
+          if (window.markers.length > 0) {
+            const bounds = new google.maps.LatLngBounds();
+            window.markers.forEach(marker => {
+              bounds.extend(marker.getPosition());
+            });
+            map.fitBounds(bounds);
+          }
+        } catch (error) {
+          console.error('Error loading pizza places:', error);
+          document.getElementById('results').innerHTML = `
+            <div class="error-message">
+              <p>Failed to load pizza places. Please try again later.</p>
+            </div>
+          `;
+        }
+      }
+
+      // Initial load of pizza places
+      loadPizzaPlaces();
+    };
+
+    // Rest of your existing scripts
+    document.addEventListener('DOMContentLoaded', async function () {
+      // Check authentication
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        window.location.href = 'loginpage.html';
+        return;
+      }
+
+      // Set up event listeners
+      setupEventListeners();
+    });
+
+    async function updateResults() {
+      const token = localStorage.getItem('authToken');
+      const searchQuery = document.querySelector('.search-input').value;
+      const selectedCrusts = Array.from(document.querySelectorAll('.filter-option input:checked'))
+        .map(input => input.value);
+      const selectedDietary = Array.from(document.querySelectorAll('.filter-option input:checked'))
+        .map(input => input.value);
+      const selectedRating = document.querySelector('.filter-option input:checked')?.value;
+
+      const queryParams = new URLSearchParams();
+      if (searchQuery) queryParams.append('query', searchQuery);
+      if (selectedCrusts.length) queryParams.append('crustTypes', selectedCrusts.join(','));
+      if (selectedDietary.length) queryParams.append('dietaryOptions', selectedDietary.join(','));
+      if (selectedRating) queryParams.append('rating', selectedRating);
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/pizzaplaces/search?${queryParams}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.status === 401) {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
+          window.location.href = 'loginpage.html';
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        displayPizzaPlaces(data);
+      } catch (error) {
+        console.error('Error updating results:', error);
+        document.getElementById('results').innerHTML = `
+            <div class="error-message">
+              <p>Failed to load pizza places. Please try again later.</p>
+            </div>
+          `;
+      }
+    }
+
+    // Function to display pizza places
+    function displayPizzaPlaces(places) {
+      const pizzaList = document.getElementById('pizza-list');
+      if (!Array.isArray(places) || places.length === 0) {
+        pizzaList.innerHTML = '<div class="empty">No pizza places found.</div>';
+        return;
+      }
+      pizzaList.innerHTML = places.map(place => `
+        <div class="pizza-card">
+          <div class="pizza-info">
+            <div class="pizza-name">${place.name}</div>
+            <div class="pizza-rating">
+              <i class="fas fa-star"></i> ${place.average_rating ?? 'N/A'}
+            </div>
+            <div class="pizza-description">${place.description ?? ''}</div>
+            <div class="pizza-meta">
+              <span class="pizza-location"><i class="fas fa-map-marker-alt"></i> ${place.address}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Fetch all pizza places from backend and display
+    async function fetchAndDisplayAllPizzaPlaces() {
+      const token = localStorage.getItem('authToken');
+      try {
+        const response = await fetch('http://localhost:3000/api/pizzaplaces', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.status === 401) {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
+          window.location.href = 'loginpage.html';
+          return;
+        }
+        const data = await response.json();
+        displayPizzaPlaces(data);
+      } catch (error) {
+        document.getElementById('pizza-list').innerHTML = '<div class="empty">Failed to load pizza places.</div>';
+      }
+    }
+
+    // Fetch pizza places by search query
+    async function fetchAndDisplaySearchedPizzaPlaces(query) {
+      const token = localStorage.getItem('authToken');
+      try {
+        const url = `http://localhost:3000/api/pizzaplaces/search?query=${encodeURIComponent(query)}`;
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.status === 401) {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
+          window.location.href = 'loginpage.html';
+          return;
+        }
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        displayPizzaPlaces(data);
+      } catch (error) {
+        document.getElementById('pizza-list').innerHTML = '<div class="empty">Failed to load pizza places.</div>';
+      }
+    }
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchAndDisplayAllPizzaPlaces();
+
+      // Add search button functionality
+      document.querySelector('.search-btn').addEventListener('click', () => {
+        const query = document.querySelector('.search-input').value.trim();
+        if (query) {
+          fetchAndDisplaySearchedPizzaPlaces(query);
+        } else {
+          fetchAndDisplayAllPizzaPlaces();
+        }
+      });
+
+      // Optional: Enter key triggers search
+      document.querySelector('.search-input').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          document.querySelector('.search-btn').click();
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

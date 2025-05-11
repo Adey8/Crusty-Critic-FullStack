@@ -1,0 +1,99 @@
+{
+  "auth": {
+    "register": {
+      "username": "testuser",
+      "email": "test@example.com",
+      "password": "Test@123"
+    },
+    "login": {
+      "email": "test@example.com",
+      "password": "Test@123"
+    }
+  },
+  "pizzaPlaces": {
+    "create": {
+      "name": "Test Pizza Place",
+      "address": "123 Test Street",
+      "description": "A test pizza place",
+      "ownerId": 1
+    },
+    "update": {
+      "name": "Updated Pizza Place",
+      "address": "456 Updated Street",
+      "description": "An updated test pizza place"
+    }
+  },
+  "reviews": {
+    "create": {
+      "pizzaPlaceId": 1,
+      "rating": 4.5,
+      "comment": "Great test pizza place!"
+    },
+    "update": {
+      "rating": 5,
+      "comment": "Updated review - even better!"
+    }
+  },
+  "challenges": {
+    "create": {
+      "title": "Test Challenge",
+      "description": "A test challenge for pizza lovers",
+      "startDate": "2024-03-25",
+      "endDate": "2024-04-25"
+    }
+  },
+  "polls": {
+    "create": {
+      "challengeId": 1,
+      "options": [
+        "Option 1",
+        "Option 2",
+        "Option 3"
+      ]
+    }
+  },
+  "votes": {
+    "create": {
+      "pollId": 1,
+      "optionId": 1
+    }
+  },
+  "dietaryNeeds": {
+    "create": {
+      "name": "Gluten Free",
+      "description": "No gluten ingredients"
+    },
+    "update": {
+      "name": "Updated Gluten Free",
+      "description": "Updated description for gluten free"
+    }
+  },
+  "toppings": {
+    "create": {
+      "name": "Test Topping",
+      "description": "A test topping",
+      "price": 2.99
+    },
+    "update": {
+      "name": "Updated Topping",
+      "description": "An updated test topping",
+      "price": 3.99
+    }
+  },
+  "admin": {
+    "updateUser": {
+      "email": "admin@example.com",
+      "role": "admin"
+    }
+  },
+  "testIds": {
+    "userId": 1,
+    "pizzaPlaceId": 1,
+    "reviewId": 1,
+    "challengeId": 1,
+    "pollId": 1,
+    "voteId": 1,
+    "dietaryNeedId": 1,
+    "toppingId": 1
+  }
+} 

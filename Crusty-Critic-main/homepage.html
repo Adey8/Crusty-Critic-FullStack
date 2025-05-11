@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crusty Critic Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .logo-center {
+      display: block;
+      width: 220px;
+      height: auto;
+      margin: 40px auto;
+      transition: transform 0.3s ease;
+    }
+    .logo-center:hover {
+      transform: scale(1.05);
+    }
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    main h1 {
+      margin-bottom: 40px;
+      font-size: 32px;
+      color: #333;
+      text-align: center;
+      position: relative;
+    }
+    main h1::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: #F8E0A1;
+      margin: 10px auto 0;
+    }
+    .reviews {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+    .top-review {
+      width: 70%;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .top-review:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .bottom-reviews {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 800px;
+      gap: 30px;
+    }
+    .review-card {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .review-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      align-items: center;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .review-rating {
+      font-size: 28px;
+      font-weight: bold;
+      color: #28a745;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .review-place {
+      font-size: 22px;
+      font-weight: bold;
+      color: #333;
+    }
+    .review-comment {
+      text-align: left;
+      color: #555;
+      margin: 15px 0;
+      line-height: 1.6;
+    }
+    .review-author {
+      font-size: 16px;
+      color: #666;
+      align-self: flex-start;
+      font-weight: 500;
+    }
+    .faq-section {
+      margin-top: 60px;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .faq-section h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #333;
+      font-size: 28px;
+      position: relative;
+    }
+    .faq-section h2::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: #F8E0A1;
+      margin: 10px auto 0;
+    }
+    .faq-item {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 25px;
+    }
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+    .faq-question {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+    .faq-question:hover {
+      background-color: rgba(248, 224, 161, 0.2);
+    }
+    .faq-question::after {
+      content: '+';
+      font-size: 28px;
+      color: #007bff;
+      transition: transform 0.3s ease;
+    }
+    .faq-question.active::after {
+      content: '-';
+    }
+    .faq-answer {
+      color: #555;
+      line-height: 1.6;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease;
+      padding: 0 10px;
+    }
+    .faq-answer.show {
+      max-height: 500px;
+      padding: 15px 10px;
+    }
+    .footer {
+      background-color: #F8E0A1;
+      text-align: center;
+      padding: 30px 0;
+      margin-top: auto;
+    }
+    .footer img {
+      width: 120px;
+      height: auto;
+      margin-top: 15px;
+      transition: transform 0.3s ease;
+    }
+    .footer img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div id="header"></div>
+  
+  <a href="homepage.html">
+    <img src="CrustyCriticLogo.png" alt="Crusty Critic Logo" class="logo-center">
+  </a>
+  <main>
+    <h1>Top 3 Rated Reviews</h1>
+    <div class="reviews">
+      <div class="top-review review-card">
+        <div class="review-header">
+          <div class="review-place">Pizza Paradise</div>
+          <div class="review-rating">5/5</div>
+        </div>
+        <div class="review-comment">Absolutely amazing! The crust was perfectly crispy, and the toppings were fresh and flavorful. The service was exceptional, and the atmosphere was cozy. Definitely my new favorite pizza place in town!</div>
+        <div class="review-author">By SarahPizzaLover</div>
+      </div>
+      <div class="bottom-reviews">
+        <div class="review-card">
+          <div class="review-header">
+            <div class="review-place">Slice of Heaven</div>
+            <div class="review-rating">4.5/5</div>
+          </div>
+          <div class="review-comment">Great pizza with a perfect balance of cheese and sauce. The pepperoni was crispy just how I like it. The only reason it's not a 5 is because the wait time was a bit long.</div>
+          <div class="review-author">By MikeTheFoodie</div>
+        </div>
+        <div class="review-card">
+          <div class="review-header">
+            <div class="review-place">The Dough House</div>
+            <div class="review-rating">4/5</div>
+          </div>
+          <div class="review-comment">Solid pizza place with a great selection of toppings. The crust was nice and chewy, and the sauce had a good kick to it. Would definitely recommend trying their specialty pizzas.</div>
+          <div class="review-author">By PizzaEnthusiast</div>
+        </div>
+      </div>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <div class="faq-question">How do I write a review?</div>
+        <div class="faq-answer">To write a review, click on "Write Review" in the navigation bar. Select the pizzeria you want to review, write your thoughts, and submit your review. Make sure to be honest and detailed in your feedback!</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">What are pizza challenges?</div>
+        <div class="faq-answer">Pizza challenges are fun activities that encourage you to explore different pizzerias and types of pizza. Complete challenges to earn badges and recognition in the community!</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">How do I find the best deals?</div>
+        <div class="faq-answer">Visit the "Deals" section to find current promotions and discounts at local pizzerias. You can also check individual pizzeria pages for their special offers.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Can I edit my reviews?</div>
+        <div class="faq-answer">Yes, you can edit your reviews by visiting your profile page. Click on "My Reviews" and select the review you want to edit.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">How are ratings calculated?</div>
+        <div class="faq-answer">Ratings are based on multiple factors including taste, service, atmosphere, and value for money. The overall rating is an average of all user reviews for that pizzeria.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">What makes a good review?</div>
+        <div class="faq-answer">A good review is detailed, honest, and helpful to other users. Include information about the crust, toppings, service, atmosphere, and any special features that stood out to you.</div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    Crusty Critic Capstone Project<br>
+    <img src="CrustyCriticLogo.png" alt="Crusty Critic Logo">
+  </footer>
+
+  <script type="module">
+    import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+    
+    // Add header styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = headerStyles;
+    document.head.appendChild(styleSheet);
+    
+    // Add header HTML
+    document.getElementById('header').innerHTML = getHeaderHTML();
+    
+    // Initialize header
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeHeader();
+    });
+    
+    // Make logout function globally available
+    window.logout = logout;
+
+    // FAQ functionality
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(question => {
+      question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isActive = question.classList.contains('active');
+        
+        // Close all other answers
+        document.querySelectorAll('.faq-question').forEach(q => {
+          q.classList.remove('active');
+          q.nextElementSibling.classList.remove('show');
+        });
+        
+        // Toggle current answer
+        if (!isActive) {
+          question.classList.add('active');
+          answer.classList.add('show');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

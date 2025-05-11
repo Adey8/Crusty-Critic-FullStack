@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Listings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+        .wrapper { flex: 1; padding: 20px; display: flex; gap: 20px; }
+        .admin-content { flex: 1; background: #fff; border: 1px solid #ccc; border-radius: 8px; padding: 32px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); min-height: 300px; }
+        h2 { margin-top: 0; }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+    <div class="wrapper">
+        <div id="adminSidebar"></div>
+        <div class="admin-content">
+            <h2>Manage Listings</h2>
+            <div id="listingsTableContainer"><em>Listings management coming soon...</em></div>
+        </div>
+    </div>
+    <script type="module">
+        import { getHeaderHTML, headerStyles, initializeHeader, logout } from '../modules/adminHeader.js';
+        import adminSidebar from '../modules/adminSidebar.js';
+        // Add header styles
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = headerStyles;
+        document.head.appendChild(styleSheet);
+        // Add header HTML
+        document.getElementById('header').innerHTML = getHeaderHTML();
+        // Add sidebar
+        document.getElementById('adminSidebar').innerHTML = adminSidebar();
+        // Initialize header
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeHeader();
+        });
+        window.logout = logout;
+    </script>
+</body>
+</html>

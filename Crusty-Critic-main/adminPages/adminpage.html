@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .wrapper {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+    }
+    .admin-content {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 32px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      min-height: 300px;
+    }
+    .summary-cards {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    .summary-card {
+      background: #f8f9fa;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+      flex: 1;
+    }
+    .summary-card h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+      font-size: 22px;
+    }
+    .summary-card p {
+      font-size: 32px;
+      margin: 0;
+      color: #007bff;
+      font-weight: bold;
+    }
+    .welcome {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div id="header"></div>
+  <div class="wrapper">
+    <div id="adminSidebar"></div>
+    <div class="admin-content">
+      <div class="welcome">Welcome to the Admin Dashboard!</div>
+      <div class="summary-cards">
+        <div class="summary-card">
+          <h3>Total Users</h3>
+          <p id="totalUsers">-</p>
+        </div>
+        <div class="summary-card">
+          <h3>Total Reviews</h3>
+          <p id="totalReviews">-</p>
+        </div>
+        <div class="summary-card">
+          <h3>Active Listings</h3>
+          <p id="totalListings">-</p>
+        </div>
+      </div>
+      <div style="margin-top:40px; color:#666;">Use the sidebar to manage users, reviews, listings, polls, and challenges.</div>
+    </div>
+  </div>
+  <script type="module">
+    import { getHeaderHTML, headerStyles, initializeHeader, logout } from '../modules/adminHeader.js';
+    import adminSidebar from '../modules/adminSidebar.js';
+    // Add header styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = headerStyles;
+    document.head.appendChild(styleSheet);
+    // Add header HTML
+    document.getElementById('header').innerHTML = getHeaderHTML();
+    // Add sidebar
+    document.getElementById('adminSidebar').innerHTML = adminSidebar();
+    // Initialize header
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeHeader();
+      fetchSummary();
+    });
+    window.logout = logout;
+    // Fetch summary data
+    async function fetchSummary() {
+      const authToken = localStorage.getItem('authToken');
+      try {
+        const [usersRes, reviewsRes, listingsRes] = await Promise.all([
+          fetch('http://localhost:3000/api/admin/users', { headers: { 'Authorization': `Bearer ${authToken}` } }),
+          fetch('http://localhost:3000/api/reviews', { headers: { 'Authorization': `Bearer ${authToken}` } }),
+          fetch('http://localhost:3000/api/listings', { headers: { 'Authorization': `Bearer ${authToken}` } })
+        ]);
+        const users = usersRes.ok ? await usersRes.json() : [];
+        const reviews = reviewsRes.ok ? await reviewsRes.json() : [];
+        const listings = listingsRes.ok ? await listingsRes.json() : [];
+        document.getElementById('totalUsers').textContent = users.length;
+        document.getElementById('totalReviews').textContent = reviews.length;
+        document.getElementById('totalListings').textContent = listings.length;
+      } catch (e) {
+        document.getElementById('totalUsers').textContent = '-';
+        document.getElementById('totalReviews').textContent = '-';
+        document.getElementById('totalListings').textContent = '-';
+      }
+    }
+  </script>
+</body>
+</html>

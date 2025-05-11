@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Crusty Critic Write a Review</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    /* Import header styles */
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #F8E0A1;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .nav-left {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+    .nav-right {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .nav a {
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 8px 15px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .nav a:hover {
+      background-color: rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .nav button {
+      background: none;
+      border: none;
+      color: #007bff;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 15px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .nav button:hover {
+      background-color: rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .nav .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav .user-info .profile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+    .nav .user-info .profile-icon:hover {
+      transform: scale(1.1);
+    }
+    .nav .user-info a {
+      color: #007bff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+    .wrapper {
+      flex: 1;
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 30px;
+    }
+    .review-container {
+      display: flex;
+      gap: 30px;
+      width: 100%;
+    }
+    .review-form-container {
+      flex: 1;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+      height: fit-content;
+    }
+    .review-form-container h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .form-group {
+      margin-bottom: 25px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      padding: 12px 15px;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #F8E0A1;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(248, 224, 161, 0.2);
+    }
+    .form-group textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    .rating-group {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .rating-options {
+      display: flex;
+      gap: 10px;
+    }
+    .rating-option {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .rating-option:hover {
+      background: #F8E0A1;
+      color: #333;
+      transform: scale(1.1);
+    }
+    .rating-option.selected {
+      background: #F8E0A1;
+      color: #333;
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    .form-btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .form-btn.primary {
+      background: #28a745;
+      color: white;
+    }
+    .form-btn.secondary {
+      background: #f8f9fa;
+      color: #333;
+    }
+    .form-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .form-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .reviews-container {
+      flex: 1;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    .reviews-container h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .review-item {
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .review-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .review-place {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+    .review-rating {
+      color: #28a745;
+      font-weight: bold;
+    }
+    .review-text {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    .review-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #666;
+      font-size: 14px;
+    }
+    .review-author {
+      font-weight: 500;
+    }
+    .review-date {
+      color: #999;
+    }
+    .footer {
+      background-color: #F8E0A1;
+      text-align: center;
+      padding: 30px 0;
+      margin-top: auto;
+    }
+    .footer img {
+      width: 120px;
+      height: auto;
+      margin-top: 15px;
+      transition: transform 0.3s ease;
+    }
+    .footer img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div id="header"></div>
+  
+  <div class="wrapper">
+    <div class="review-container">
+      <div class="review-form-container">
+        <h2>Write a Review</h2>
+        <form id="reviewForm">
+          <div class="form-group">
+            <label for="pizzeriaName">Pizzeria Name</label>
+            <input type="text" id="pizzeriaName" placeholder="Enter pizzeria name" required>
+          </div>
+          <div class="form-group">
+            <label for="reviewText">Your Review</label>
+            <textarea id="reviewText" placeholder="Share your experience..." required></textarea>
+          </div>
+          <div class="rating-group">
+            <label>Rating:</label>
+            <div class="rating-options">
+              <div class="rating-option" data-rating="1">1</div>
+              <div class="rating-option" data-rating="2">2</div>
+              <div class="rating-option" data-rating="3">3</div>
+              <div class="rating-option" data-rating="4">4</div>
+              <div class="rating-option" data-rating="5">5</div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="form-btn secondary">Cancel</button>
+            <button type="submit" class="form-btn primary" id="submitReview" disabled>Submit Review</button>
+          </div>
+        </form>
+      </div>
+      <div class="reviews-container">
+        <h2>Recent Reviews</h2>
+        <div class="review-list">
+          <!-- Reviews will be loaded here dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Crusty Critic Capstone Project<br>
+    <img src="CrustyCriticLogo.png" alt="Crusty Critic Logo">
+  </footer>
+
+  <script type="module">
+    import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+    
+    // Add header styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = headerStyles;
+    document.head.appendChild(styleSheet);
+    
+    // Add header HTML
+    document.getElementById('header').innerHTML = getHeaderHTML();
+    
+    // Initialize header
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeHeader();
+      loadAllReviews();
+    });
+    
+    // Make logout function globally available
+    window.logout = logout;
+    
+    // Rest of your existing scripts
+    document.addEventListener('DOMContentLoaded', async () => {
+      const userInfo = document.getElementById('userInfo');
+      const usernameDisplay = document.getElementById('usernameDisplay');
+      const profileIcon = document.getElementById('profileIcon');
+      const authButtons = document.getElementById('authButtons');
+      const authToken = localStorage.getItem('authToken');
+      
+      if (!authToken) {
+        userInfo.style.display = 'none';
+        authButtons.style.display = 'flex';
+        window.location.href = 'loginpage.html';
+        return;
+      }
+
+     
+
+      // Rating selection
+      const ratingOptions = document.querySelectorAll('.rating-option');
+      let selectedRating = 0;
+
+      ratingOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          const rating = parseInt(option.dataset.rating);
+          selectedRating = rating;
+          ratingOptions.forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+        });
+      });
+
+      // Form validation
+      const reviewForm = document.getElementById('reviewForm');
+      const pizzeriaName = document.getElementById('pizzeriaName');
+      const reviewText = document.getElementById('reviewText');
+      const submitBtn = document.getElementById('submitReview');
+
+      reviewForm.addEventListener('input', () => {
+        const isFormValid = pizzeriaName.value.trim().length > 0 && 
+                          reviewText.value.trim().length > 0 && 
+                          selectedRating > 0;
+        submitBtn.disabled = !isFormValid;
+      });
+
+      reviewForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const pizzeria = pizzeriaName.value.trim();
+        const review = reviewText.value.trim();
+        if (pizzeria.length === 0 || review.length === 0 || selectedRating === 0) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
+        try {
+          const response = await fetch('http://localhost:3000/api/reviews', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+              pizzeria_name: pizzeria,
+              rating: selectedRating,
+              review_text: review
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to submit review');
+          }
+
+          alert('Review submitted successfully!');
+          // Reset form
+          reviewForm.reset();
+          selectedRating = 0;
+          ratingOptions.forEach(opt => opt.classList.remove('selected'));
+          // Reload reviews
+          await loadUserReviews();
+        } catch (error) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Review';
+        }
+      });
+    });
+
+    async function loadUserReviews() {
+      try {
+        const authToken = localStorage.getItem('authToken');
+        const response = await fetch('http://localhost:3000/api/reviews', {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch reviews');
+        }
+
+        const reviews = await response.json();
+        const reviewList = document.querySelector('.review-list');
+        reviewList.innerHTML = '';
+
+        if (reviews.length === 0) {
+          reviewList.innerHTML = '<p>No reviews yet. Be the first to write a review!</p>';
+          return;
+        }
+
+        reviews.forEach(review => {
+          const reviewItem = document.createElement('div');
+          reviewItem.className = 'review-item';
+          reviewItem.innerHTML = `
+            <div class="review-header">
+              <div class="review-place">${review.pizzeria_name || (review.pizzaPlace && review.pizzaPlace.name) || ''}</div>
+              <div class="review-rating">${review.rating}/5</div>
+            </div>
+            <div class="review-text">${review.review_text}</div>
+            <div class="review-meta">
+              <span class="review-author">By ${review.user && review.user.username ? review.user.username : 'Unknown'}</span>
+              <span class="review-date">${new Date(review.date_submitted).toLocaleDateString()}</span>
+              ${review.user_id === parseInt(localStorage.getItem('userId')) ? 
+                `<button class="edit-review-btn" onclick="editReview(${review.review_id})">Edit</button>` : 
+                ''}
+            </div>
+          `;
+          reviewList.appendChild(reviewItem);
+        });
+      } catch (error) {
+        console.error('Error loading reviews:', error);
+      }
+    }
+
+    async function editReview(reviewId) {
+      try {
+        const authToken = localStorage.getItem('authToken');
+        const response = await fetch(`http://localhost:3000/api/reviews/${reviewId}`, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch review');
+        }
+
+        const review = await response.json();
+        
+        // Populate form with review data
+        document.getElementById('pizzeriaName').value = review.pizzaPlace.name;
+        document.getElementById('reviewText').value = review.review_text;
+        
+        // Set rating
+        const ratingOptions = document.querySelectorAll('.rating-option');
+        ratingOptions.forEach(opt => {
+          opt.classList.remove('selected');
+          if (parseInt(opt.dataset.rating) === review.rating) {
+            opt.classList.add('selected');
+          }
+        });
+
+        // Change form to edit mode
+        const submitBtn = document.getElementById('submitReview');
+        submitBtn.textContent = 'Update Review';
+        submitBtn.onclick = async (e) => {
+          e.preventDefault();
+          const pizzeria = document.getElementById('pizzeriaName').value.trim();
+          const reviewText = document.getElementById('reviewText').value.trim();
+          const selectedRating = document.querySelector('.rating-option.selected')?.dataset.rating;
+
+          if (!pizzeria || !reviewText || !selectedRating) {
+            alert('Please fill all fields');
+            return;
+          }
+
+          try {
+            const updateResponse = await fetch(`http://localhost:3000/api/reviews/${reviewId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+              },
+              body: JSON.stringify({
+                rating: parseInt(selectedRating),
+                reviewText: reviewText
+              })
+            });
+
+            if (!updateResponse.ok) {
+              throw new Error('Failed to update review');
+            }
+
+            alert('Review updated successfully!');
+            // Reset form
+            document.getElementById('reviewForm').reset();
+            ratingOptions.forEach(opt => opt.classList.remove('selected'));
+            // Reload reviews
+            await loadUserReviews();
+          } catch (error) {
+            console.error('Error updating review:', error);
+          }
+        };
+      } catch (error) {
+        console.error('Error editing review:', error);
+      }
+    }
+
+    async function loadAllReviews() {
+      try {
+        const authToken = localStorage.getItem('authToken');
+        const response = await fetch('http://localhost:3000/api/reviews', {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch reviews');
+        }
+
+        const reviews = await response.json();
+        const reviewList = document.querySelector('.review-list');
+        reviewList.innerHTML = '';
+
+        if (reviews.length === 0) {
+          reviewList.innerHTML = '<p>No reviews yet. Be the first to write a review!</p>';
+          return;
+        }
+
+        reviews.forEach(review => {
+          const reviewItem = document.createElement('div');
+          reviewItem.className = 'review-item';
+          reviewItem.innerHTML = `
+            <div class="review-header">
+              <div class="review-place">${review.pizzeria_name || (review.pizzaPlace && review.pizzaPlace.name) || ''}</div>
+              <div class="review-rating">${review.rating}/5</div>
+            </div>
+            <div class="review-text">${review.review_text}</div>
+            <div class="review-meta">
+              <span class="review-author">By ${review.user && review.user.username ? review.user.username : 'Unknown'}</span>
+              <span class="review-date">${new Date(review.date_submitted).toLocaleDateString()}</span>
+            </div>
+          `;
+          reviewList.appendChild(reviewItem);
+        });
+      } catch (error) {
+        console.error('Error loading reviews:', error);
+      }
+    }
+  </script>
+</body>
+</html>

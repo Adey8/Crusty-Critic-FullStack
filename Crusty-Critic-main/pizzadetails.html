@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Place Details - Crusty Critic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff6b00;
+            --secondary-color: #ff8c42;
+            --text-color: #333;
+            --light-gray: #f8f9fa;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .back-button i {
+            margin-right: 5px;
+        }
+
+        .pizza-info {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .pizza-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .details {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .name-rating {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--primary-color);
+        }
+
+        .description {
+            color: #666;
+        }
+
+        .meta-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .meta-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .meta-item h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .reviews-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .write-review-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .write-review-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .review-card {
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+        }
+
+        .review-card:last-child {
+            border-bottom: none;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .review-author {
+            font-weight: bold;
+        }
+
+        .review-date {
+            color: #666;
+        }
+
+        .review-content {
+            color: #444;
+        }
+
+        .location-section {
+            margin-top: 20px;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .pizza-info {
+                grid-template-columns: 1fr;
+            }
+
+            .meta-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+    
+    <div class="container">
+        <div class="header">
+            <a href="mainpage.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Search
+            </a>
+            <div class="pizza-info">
+                <img id="pizzaImage" class="pizza-image" src="" alt="Pizza Place">
+                <div class="details">
+                    <div class="name-rating">
+                        <h1 id="pizzaName"></h1>
+                        <div class="rating" id="pizzaRating"></div>
+                    </div>
+                    <p class="description" id="pizzaDescription"></p>
+                </div>
+            </div>
+            <div class="meta-info">
+                <div class="meta-item">
+                    <h3>Price Range</h3>
+                    <p id="priceRange"></p>
+                </div>
+                <div class="meta-item">
+                    <h3>Address</h3>
+                    <p id="address"></p>
+                </div>
+                <div class="meta-item">
+                    <h3>Phone</h3>
+                    <p id="phone"></p>
+                </div>
+                <div class="meta-item">
+                    <h3>Hours</h3>
+                    <p id="hours"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="reviews-section">
+            <div class="reviews-header">
+                <h2>Reviews</h2>
+                <button class="write-review-btn" id="writeReviewBtn">Write a Review</button>
+            </div>
+            <div id="reviewsList"></div>
+        </div>
+
+        <div class="location-section">
+            <h2>Location</h2>
+            <div class="map-container" id="map"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+        
+        // Add header styles
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = headerStyles;
+        document.head.appendChild(styleSheet);
+        
+        // Add header HTML
+        document.getElementById('header').innerHTML = getHeaderHTML();
+        
+        // Initialize header
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeHeader();
+        });
+        
+        // Make logout function globally available
+        window.logout = logout;
+        
+        // Rest of your existing scripts
+        document.addEventListener('DOMContentLoaded', async function() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = 'loginpage.html';
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const pizzaPlaceId = urlParams.get('id');
+
+            if (!pizzaPlaceId) {
+                window.location.href = 'mainpage.html';
+                return;
+            }
+
+            try {
+                // Fetch pizza place details
+                const response = await fetch(`http://localhost:3000/api/pizzaplaces/${pizzaPlaceId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 401) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('user');
+                    window.location.href = 'loginpage.html';
+                    return;
+                }
+
+                const pizzaPlace = await response.json();
+                displayPizzaPlaceDetails(pizzaPlace);
+
+                // Fetch reviews
+                const reviewsResponse = await fetch(`http://localhost:3000/api/reviews/pizzaplace/${pizzaPlaceId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (reviewsResponse.ok) {
+                    const reviews = await reviewsResponse.json();
+                    displayReviews(reviews);
+                }
+
+                // Initialize map
+                initializeMap(pizzaPlace.latitude, pizzaPlace.longitude);
+
+            } catch (error) {
+                console.error('Error loading pizza place details:', error);
+            }
+
+            // Set up event listeners
+            document.getElementById('writeReviewBtn').addEventListener('click', () => {
+                window.location.href = `reviewpage.html?pizzaPlaceId=${pizzaPlaceId}`;
+            });
+        });
+
+        function displayPizzaPlaceDetails(pizzaPlace) {
+            document.getElementById('pizzaName').textContent = pizzaPlace.name;
+            document.getElementById('pizzaImage').src = pizzaPlace.imageUrl || 'default-pizza.jpg';
+            document.getElementById('pizzaDescription').textContent = pizzaPlace.description || 'No description available';
+            document.getElementById('priceRange').textContent = pizzaPlace.priceRange || 'N/A';
+            document.getElementById('address').textContent = pizzaPlace.address || 'Address not available';
+            document.getElementById('phone').textContent = pizzaPlace.phone || 'Phone not available';
+            document.getElementById('hours').textContent = pizzaPlace.hours || 'Hours not available';
+
+            // Display rating
+            const ratingContainer = document.getElementById('pizzaRating');
+            const rating = pizzaPlace.rating || 0;
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+            ratingContainer.innerHTML = `
+                ${'<i class="fas fa-star"></i>'.repeat(fullStars)}
+                ${halfStar ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                ${'<i class="far fa-star"></i>'.repeat(emptyStars)}
+                <span>${rating.toFixed(1)}</span>
+            `;
+        }
+
+        function displayReviews(reviews) {
+            const reviewsList = document.getElementById('reviewsList');
+            
+            if (!reviews || reviews.length === 0) {
+                reviewsList.innerHTML = '<p>No reviews yet. Be the first to review!</p>';
+                return;
+            }
+
+            reviewsList.innerHTML = reviews.map(review => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="review-author">${review.user.username}</span>
+                        <span class="review-date">${new Date(review.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <div class="rating">
+                        ${'<i class="fas fa-star"></i>'.repeat(Math.floor(review.rating))}
+                        ${'<i class="far fa-star"></i>'.repeat(5 - Math.floor(review.rating))}
+                    </div>
+                    <p class="review-content">${review.content}</p>
+                </div>
+            `).join('');
+        }
+
+        function initializeMap(lat, lng) {
+            // Initialize map using your preferred mapping service (e.g., Google Maps, Mapbox)
+            // This is a placeholder for the actual map implementation
+            const mapContainer = document.getElementById('map');
+            mapContainer.innerHTML = `
+                <iframe
+                    width="100%"
+                    height="100%"
+                    frameborder="0"
+                    style="border:0"
+                    src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${lat},${lng}"
+                    allowfullscreen>
+                </iframe>
+            `;
+        }
+    </script>
+</body>
+</html> 

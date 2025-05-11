@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crusty Critic Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #F8E0A1;
+            font-family: Arial, sans-serif;
+        }
+        #header {
+            width: 100%;
+        }
+        .signup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 50px 0 50px;
+            padding-bottom: 20px;
+        }
+        .logo {
+            width: 360px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .signup-box {
+            width: 400px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .signup-box h2 {
+            text-align: center;
+            margin: 0 0 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .signup-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .signup-box .buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .signup-btn {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .login-link {
+            background: none;
+            color: #007bff;
+            text-decoration: underline;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .password-mismatch {
+            border-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+    <div class="signup-container">
+        <a href="homepage.html"><img src="CrustyCriticLogo.png" alt="Crusty Critic Logo" class="logo"></a>
+        <div class="signup-box">
+            <h2>Sign Up</h2>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="loading" id="loading">Creating account...</div>
+            <form id="signupForm" method="post">
+                <input type="text" name="firstName" id="firstName" placeholder="First Name" required>
+                <input type="text" name="lastName" id="lastName" placeholder="Last Name" required>
+                <input type="text" name="username" id="username" placeholder="Username" required>
+                <input type="email" name="email" id="email" placeholder="Email" required>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+                <div class="buttons">
+                    <button type="submit" class="signup-btn" id="signupBtn">Sign Up</button>
+                    <button type="button" class="login-link" onclick="window.location.href='loginpage.html'">Log In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+        // Add header styles
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = headerStyles;
+        document.head.appendChild(styleSheet);
+        // Add header HTML
+        document.getElementById('header').innerHTML = getHeaderHTML();
+        // Initialize header
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeHeader();
+        });
+        // Make logout function globally available
+        window.logout = logout;
+    </script>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const loading = document.getElementById('loading');
+            const signupBtn = document.getElementById('signupBtn');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            // Reset error message and show loading
+            errorMessage.style.display = 'none';
+            loading.style.display = 'block';
+            signupBtn.disabled = true;
+            confirmPasswordInput.classList.remove('password-mismatch');
+            // Validate password match
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Passwords do not match';
+                errorMessage.style.display = 'block';
+                confirmPasswordInput.classList.add('password-mismatch');
+                loading.style.display = 'none';
+                signupBtn.disabled = false;
+                return;
+            }
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password,
+                        confirmPassword,
+                        firstName,
+                        lastName
+                    })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Registration failed');
+                }
+                // Store the token in localStorage
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                // Redirect to homepage on successful registration
+                window.location.href = 'homepage.html';
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+                signupBtn.disabled = false;
+            }
+        });
+        // Add password match validation on the fly
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            const errorMessage = document.getElementById('errorMessage');
+            if (password !== confirmPassword) {
+                this.classList.add('password-mismatch');
+                errorMessage.textContent = 'Passwords do not match';
+                errorMessage.style.display = 'block';
+            } else {
+                this.classList.remove('password-mismatch');
+                errorMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

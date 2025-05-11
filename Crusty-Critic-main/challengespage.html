@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crusty Critic Challenges &amp; Polls</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background-color: #ffffff;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    .wrapper {
+      display: flex;
+      height: calc(100vh - 80px); /* header + footer height approx */
+      max-width: 100vw;
+      margin: 0;
+      padding: 0;
+      gap: 0;
+    }
+    .sidebar {
+      width: 300px;
+      min-width: 220px;
+      max-width: 340px;
+      background: #fffbe8;
+      border-right: 2px solid #f8e0a1;
+      box-shadow: 2px 0 12px rgba(248, 224, 161, 0.08);
+      padding: 32px 24px 24px 24px;
+      height: 100%;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      overflow-y: auto;
+    }
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 26px;
+      color: #b8860b;
+      text-align: center;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f8e0a1;
+      margin-bottom: 25px;
+      letter-spacing: 1px;
+    }
+    .toggle-group {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 0;
+    }
+    .toggle-group button {
+      background: #fff6d6;
+      border: 1.5px solid #f8e0a1;
+      border-radius: 8px;
+      padding: 16px 10px;
+      font-size: 17px;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.2s, color 0.2s;
+      color: #b8860b;
+      font-weight: 600;
+      outline: none;
+    }
+    .toggle-group button:hover,
+    .toggle-group button.active {
+      background: #f8e0a1;
+      color: #333;
+      border-color: #f8e0a1;
+    }
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: 0;
+      background: #f8f9fa;
+      position: relative;
+      z-index: 1;
+      padding: 40px 40px 40px 40px;
+      overflow-y: auto;
+    }
+    .display-area {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 30px 30px 20px 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      min-height: 300px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .display-area ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .display-area li {
+      margin-bottom: 24px;
+      padding: 24px;
+      background: #fffbe8;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .display-area li:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    .challenge-title {
+      font-size: 20px;
+      color: #b8860b;
+      margin: 0 0 10px 0;
+      font-weight: bold;
+    }
+    .challenge-description {
+      color: #666;
+      margin: 0 0 10px 0;
+      line-height: 1.5;
+    }
+    .challenge-progress {
+      color: #28a745;
+      font-weight: bold;
+      margin: 0;
+      padding: 8px 12px;
+      background: rgba(40, 167, 69, 0.1);
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .challenge-date {
+      color: #666;
+      font-size: 0.9em;
+      margin: 10px 0 0 0;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+    }
+    .poll-options {
+      margin: 15px 0 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .poll-option {
+      margin: 8px 0;
+      padding: 10px 15px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .poll-option:hover {
+      background: #F8E0A1;
+      color: #333;
+    }
+    .poll-option.selected {
+      background: #F8E0A1;
+      color: #333;
+      font-weight: bold;
+    }
+    .footer {
+      background-color: #F8E0A1;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: auto;
+    }
+    .footer img {
+      width: 100px;
+      height: auto;
+      margin-top: 10px;
+    }
+    @media (max-width: 900px) {
+      .wrapper {
+        flex-direction: column;
+        height: auto;
+      }
+      .sidebar {
+        width: 100vw;
+        max-width: 100vw;
+        min-width: 0;
+        border-right: none;
+        border-bottom: 2px solid #f8e0a1;
+        box-shadow: 0 2px 12px rgba(248, 224, 161, 0.08);
+        padding: 20px 10px;
+        height: auto;
+        position: static;
+      }
+      .main-content {
+        min-width: 0;
+        width: 100vw;
+        height: auto;
+        padding: 20px 4vw;
+      }
+    }
+    @media (max-width: 600px) {
+      .sidebar {
+        padding: 10px 4px;
+      }
+      .main-content {
+        padding: 10px 2vw;
+      }
+      .display-area {
+        padding: 10px 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="header"></div>
+
+  <div class="wrapper">
+    <div class="sidebar">
+      <h2>Challenges</h2>
+      <div class="toggle-group">
+        <button data-tab="current" class="active">Current Challenges</button>
+        <button data-tab="completed">Completed Challenges</button>
+        <button data-tab="polls">Active Polls</button>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="display-area" id="display-area">
+        <ul id="item-list">
+          <!-- items injected here -->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Crusty Critic Capstone Project<br>
+    <img src="CrustyCriticLogo.png" alt="Crusty Critic Logo">
+  </footer>
+
+  <script type="module">
+    import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+    
+    // Add header styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = headerStyles;
+    document.head.appendChild(styleSheet);
+    
+    // Add header HTML
+    document.getElementById('header').innerHTML = getHeaderHTML();
+    
+    // Initialize header
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeHeader();
+    });
+    
+    // Make logout function globally available
+    window.logout = logout;
+
+    const tabs = {
+      current: [],
+      completed: [],
+      polls: []
+    };
+
+    const buttons = document.querySelectorAll('.toggle-group button');
+    const list = document.getElementById('item-list');
+
+    // Helper function to get auth headers
+    function getAuthHeaders() {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      return {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+    }
+
+    async function fetchPolls() {
+      try {
+        console.log('Fetching polls...');
+        const response = await fetch('http://localhost:3000/api/polls', {
+          headers: getAuthHeaders()
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const polls = await response.json();
+        console.log('Received polls:', polls);
+        
+        // Clear existing polls
+        tabs.polls = [];
+        
+        // Process polls
+        polls.forEach(poll => {
+          const pollData = {
+            id: poll.poll_id,
+            title: poll.title,
+            description: poll.description,
+            options: poll.options,
+            challenge_id: poll.challenge_id,
+            created_at: new Date(poll.created_at),
+            username: poll.user?.username || 'Unknown User'
+          };
+          
+          tabs.polls.push(pollData);
+        });
+
+        // Sort polls by creation date (newest first)
+        tabs.polls.sort((a, b) => b.created_at - a.created_at);
+
+        // If polls tab is active, render it
+        const activeTab = document.querySelector('.toggle-group button.active').getAttribute('data-tab');
+        if (activeTab === 'polls') {
+          render(activeTab);
+        }
+      } catch (error) {
+        console.error('Error fetching polls:', error);
+        if (document.querySelector('.toggle-group button.active').getAttribute('data-tab') === 'polls') {
+          list.innerHTML = '<li style="text-align: center; color: #666; padding: 30px;">Error loading polls. Please try again later.</li>';
+        }
+      }
+    }
+
+    async function fetchChallenges() {
+      try {
+        console.log('Fetching challenges...');
+        const response = await fetch('http://localhost:3000/api/challenges', {
+          headers: getAuthHeaders()
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const challenges = await response.json();
+        console.log('Received challenges:', challenges);
+        
+        // Clear existing challenges
+        tabs.current = [];
+        tabs.completed = [];
+        
+        // Sort challenges into current and completed
+        const currentDate = new Date();
+        console.log('Current date:', currentDate);
+        
+        challenges.forEach(challenge => {
+          const startDate = new Date(challenge.start_date);
+          const endDate = new Date(challenge.end_date);
+          console.log('Processing challenge:', {
+            name: challenge.challenge_name,
+            startDate,
+            endDate,
+            isCurrent: currentDate >= startDate && currentDate <= endDate
+          });
+          
+          const challengeData = {
+            id: challenge.challenge_id,
+            title: challenge.challenge_name,
+            description: challenge.description,
+            startDate: startDate,
+            endDate: endDate,
+            date: `Starts: ${startDate.toLocaleDateString()} - Ends: ${endDate.toLocaleDateString()}`
+          };
+          
+          // A challenge is current if today is between start and end dates
+          if (currentDate >= startDate && currentDate <= endDate) {
+            tabs.current.push(challengeData);
+          } else {
+            tabs.completed.push({
+              ...challengeData,
+              date: `Completed on ${endDate.toLocaleDateString()}`
+            });
+          }
+        });
+
+        console.log('Processed tabs:', {
+          current: tabs.current,
+          completed: tabs.completed
+        });
+
+        // Sort current challenges by end date (closest to ending first)
+        tabs.current.sort((a, b) => a.endDate - b.endDate);
+        
+        // Sort completed challenges by end date (most recently completed first)
+        tabs.completed.sort((a, b) => b.endDate - a.endDate);
+
+        // Get the active tab
+        const activeTab = document.querySelector('.toggle-group button.active').getAttribute('data-tab');
+        console.log('Active tab:', activeTab);
+        
+        // Render the current tab
+        render(activeTab);
+      } catch (error) {
+        console.error('Error fetching challenges:', error);
+        list.innerHTML = '<li style="text-align: center; color: #666; padding: 30px;">Error loading challenges. Please try again later.</li>';
+      }
+    }
+
+    function render(tab) {
+      console.log('Rendering tab:', tab);
+      console.log('Tab data:', tabs[tab]);
+      
+      list.innerHTML = '';
+      const items = tabs[tab] || [];
+      
+      if (!Array.isArray(items) || items.length === 0) {
+        console.log('No items to display for tab:', tab);
+        list.innerHTML = '<li style="text-align: center; color: #666; padding: 30px;">No items to display</li>';
+        return;
+      }
+
+      if (tab === 'polls') {
+        items.forEach(poll => {
+          console.log('Rendering poll:', poll);
+          const li = document.createElement('li');
+
+          const title = document.createElement('h3');
+          title.className = 'challenge-title';
+          title.textContent = poll.title;
+          li.appendChild(title);
+
+          const description = document.createElement('p');
+          description.className = 'challenge-description';
+          description.textContent = poll.description || 'No description provided';
+          li.appendChild(description);
+
+          const optionsList = document.createElement('ul');
+          optionsList.className = 'poll-options';
+          poll.options.forEach(option => {
+            const optionItem = document.createElement('li');
+            optionItem.className = 'poll-option';
+            optionItem.textContent = option;
+            optionItem.onclick = () => {
+              // Remove selected class from all options
+              optionsList.querySelectorAll('.poll-option').forEach(opt => {
+                opt.classList.remove('selected');
+              });
+              // Add selected class to clicked option
+              optionItem.classList.add('selected');
+            };
+            optionsList.appendChild(optionItem);
+          });
+          li.appendChild(optionsList);
+
+          const metadata = document.createElement('p');
+          metadata.className = 'challenge-date';
+          metadata.textContent = `Created by ${poll.username} on ${poll.created_at.toLocaleDateString()}`;
+          li.appendChild(metadata);
+
+          list.appendChild(li);
+        });
+      } else {
+        items.forEach(item => {
+          console.log('Rendering item:', item);
+          const li = document.createElement('li');
+
+          const title = document.createElement('h3');
+          title.className = 'challenge-title';
+          title.textContent = item.title;
+          li.appendChild(title);
+
+          const description = document.createElement('p');
+          description.className = 'challenge-description';
+          description.textContent = item.description;
+          li.appendChild(description);
+
+          if (item.date) {
+            const date = document.createElement('p');
+            date.className = 'challenge-date';
+            date.textContent = item.date;
+            li.appendChild(date);
+          }
+
+          // Add a progress indicator for current challenges
+          if (tab === 'current') {
+            const progress = document.createElement('p');
+            progress.className = 'challenge-progress';
+            const daysLeft = Math.ceil((item.endDate - new Date()) / (1000 * 60 * 60 * 24));
+            progress.textContent = `${daysLeft} days remaining`;
+            li.appendChild(progress);
+          }
+
+          list.appendChild(li);
+        });
+      }
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelector('.toggle-group button.active').classList.remove('active');
+        btn.classList.add('active');
+        const tab = btn.getAttribute('data-tab');
+        console.log('Tab clicked:', tab);
+        render(tab);
+      });
+    });
+
+    // Fetch data when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded, fetching data...');
+      fetchChallenges();
+      fetchPolls();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crusty Critic Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #F8E0A1;
+            font-family: Arial, sans-serif;
+        }
+        #header {
+            width: 100%;
+        }
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 100px;
+        }
+        .logo {
+            width: 360px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .login-box {
+            width: 400px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .login-box h2 {
+            text-align: center;
+            margin: 0 0 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .login-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .login-box .buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .login-btn {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .forgot-btn,
+        .signup-btn {
+            background: none;
+            color: #007bff;
+            text-decoration: underline;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div class="login-container">
+        <a href="homepage.html"><img src="CrustyCriticLogo.png" alt="Crusty Critic Logo" class="logo"></a>
+        <div class="login-box">
+            <h2>Log In</h2>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="loading" id="loading">Logging in...</div>
+            <form id="loginForm" method="post">
+                <input type="text" name="email" id="email" placeholder="Email" required>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <div class="buttons">
+                    <button type="submit" class="login-btn" id="loginBtn">Log In</button>
+                    <button type="button" class="forgot-btn">Forgot Password</button>
+                    <button type="button" class="signup-btn" onclick="window.location.href='signuppage.html'">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+        // Add header styles
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = headerStyles;
+        document.head.appendChild(styleSheet);
+        // Add header HTML
+        document.getElementById('header').innerHTML = getHeaderHTML();
+        // Initialize header
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeHeader();
+        });
+        // Make logout function globally available
+        window.logout = logout;
+        // Rest of your existing scripts
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('loginForm');
+            const errorMessage = document.getElementById('errorMessage');
+            const loading = document.getElementById('loading');
+            const loginBtn = document.getElementById('loginBtn');
+            loginForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                // Show loading and disable button
+                loading.style.display = 'block';
+                loginBtn.disabled = true;
+                errorMessage.style.display = 'none';
+                try {
+                    const response = await fetch('http://localhost:3000/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        // Store the token and user info in localStorage
+                        localStorage.setItem('authToken', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        // Redirect to main page
+                        window.location.href = 'mainpage.html';
+                    } else {
+                        errorMessage.textContent = data.message || 'Login failed. Please try again.';
+                        errorMessage.style.display = 'block';
+                    }
+                } catch (error) {
+                    errorMessage.textContent = 'An error occurred. Please try again later.';
+                    errorMessage.style.display = 'block';
+                    console.error('Login error:', error);
+                } finally {
+                    // Hide loading and enable button
+                    loading.style.display = 'none';
+                    loginBtn.disabled = false;
+                }
+            });
+            // Check if user is already logged in
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                window.location.href = 'mainpage.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

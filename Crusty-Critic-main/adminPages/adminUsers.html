@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Users</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+        .wrapper { flex: 1; padding: 20px; display: flex; gap: 20px; }
+        .admin-content { flex: 1; background: #fff; border: 1px solid #ccc; border-radius: 12px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); min-height: 300px; }
+        h2 { margin-top: 0; }
+        .card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            padding: 24px;
+            margin-top: 24px;
+        }
+        .search-box {
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-box input {
+            padding: 8px 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            width: 250px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        thead tr {
+            background: #f0f0f0;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        th, td {
+            padding: 12px 10px;
+            border: 1px solid #e0e0e0;
+            text-align: left;
+            font-size: 15px;
+        }
+        tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        tbody tr:hover {
+            background: #F8E0A1;
+        }
+        .no-users {
+            color: #888;
+            text-align: center;
+            padding: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+    <div class="wrapper">
+        <div id="adminSidebar"></div>
+        <div class="admin-content">
+            <h2>Manage Users</h2>
+            <div class="card">
+                <div class="search-box">
+                    <input type="text" id="userSearch" placeholder="Search by username or email...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div id="usersTableContainer"></div>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        import { getHeaderHTML, headerStyles, initializeHeader, logout } from '../modules/adminHeader.js';
+        import adminSidebar from '../modules/adminSidebar.js';
+        // Add header styles
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = headerStyles;
+        document.head.appendChild(styleSheet);
+        // Add header HTML
+        document.getElementById('header').innerHTML = getHeaderHTML();
+        // Add sidebar
+        document.getElementById('adminSidebar').innerHTML = adminSidebar();
+        // Initialize header
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeHeader();
+            fetchAndDisplayUsers();
+            document.getElementById('userSearch').addEventListener('input', filterUsers);
+        });
+        window.logout = logout;
+        let allUsers = [];
+        // Fetch and display all users for admin
+        async function fetchAndDisplayUsers() {
+            const authToken = localStorage.getItem('authToken');
+            const usersTableContainer = document.getElementById('usersTableContainer');
+            try {
+                const response = await fetch('http://localhost:3000/api/admin/users', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to fetch users');
+                allUsers = await response.json();
+                renderUsersTable(allUsers);
+            } catch (error) {
+                usersTableContainer.innerHTML = `<p style='color:red;'>Error loading users: ${error.message}</p>`;
+            }
+        }
+        function renderUsersTable(users) {
+            const usersTableContainer = document.getElementById('usersTableContainer');
+            if (users.length === 0) {
+                usersTableContainer.innerHTML = '<div class="no-users">No users found.</div>';
+                return;
+            }
+            let tableHtml = `<table><thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Account Type</th><th>Date Joined</th></tr></thead><tbody>`;
+            users.forEach(user => {
+                tableHtml += `<tr><td>${user.user_id}</td><td>${user.username}</td><td>${user.email}</td><td>${user.account_type}</td><td>${new Date(user.date_joined).toLocaleDateString()}</td></tr>`;
+            });
+            tableHtml += '</tbody></table>';
+            usersTableContainer.innerHTML = tableHtml;
+        }
+        function filterUsers() {
+            const query = document.getElementById('userSearch').value.toLowerCase();
+            const filtered = allUsers.filter(user =>
+                user.username.toLowerCase().includes(query) ||
+                user.email.toLowerCase().includes(query)
+            );
+            renderUsersTable(filtered);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+-- Create database (only run if not already created)
+CREATE DATABASE pizza_db;
+
+-- In pgAdmin: switch to "pizza_db" manually before running the rest
+
+-- USERS
+CREATE TABLE Users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    profile_picture_url VARCHAR(255),
+    account_type VARCHAR(10) DEFAULT 'user',
+    date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- PIZZA PLACES
+CREATE TABLE PizzaPlaces (
+    pizza_place_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(15),
+    website_url VARCHAR(255),
+    location_lat DECIMAL(9, 6),
+    location_lng DECIMAL(9, 6),
+    description TEXT,
+    average_rating DECIMAL(3, 2) DEFAULT 0
+);
+
+-- REVIEWS
+CREATE TABLE Reviews (
+    review_id SERIAL PRIMARY KEY,
+    user_id INT,
+    pizza_place_id INT,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    review_text TEXT,
+    date_submitted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    approval_status VARCHAR(10) DEFAULT 'pending',
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (pizza_place_id) REFERENCES PizzaPlaces(pizza_place_id) ON DELETE CASCADE
+);
+
+-- TOPPINGS
+CREATE TABLE Toppings (
+    topping_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    type VARCHAR(20) NOT NULL CHECK (type IN ('meat', 'vegetable', 'cheese', 'sauce', 'other'))
+);
+
+-- PIZZA PLACE TOPPINGS
+CREATE TABLE PizzaPlaceToppings (
+    pizza_place_id INT,
+    topping_id INT,
+    PRIMARY KEY (pizza_place_id, topping_id),
+    FOREIGN KEY (pizza_place_id) REFERENCES PizzaPlaces(pizza_place_id) ON DELETE CASCADE,
+    FOREIGN KEY (topping_id) REFERENCES Toppings(topping_id) ON DELETE CASCADE
+);
+
+-- PIZZA TYPES
+CREATE TABLE PizzaTypes (
+    type_id SERIAL PRIMARY KEY,
+    dough_type VARCHAR(50) NOT NULL,
+    oven_type VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE PizzaPlaceTypes (
+    pizza_place_id INT,
+    type_id INT,
+    PRIMARY KEY (pizza_place_id, type_id),
+    FOREIGN KEY (pizza_place_id) REFERENCES PizzaPlaces(pizza_place_id) ON DELETE CASCADE,
+    FOREIGN KEY (type_id) REFERENCES PizzaTypes(type_id) ON DELETE CASCADE
+);
+
+-- DIETARY NEEDS
+CREATE TABLE DietaryNeeds (
+    need_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE UserDietaryNeeds (
+    user_id INT,
+    need_id INT,
+    PRIMARY KEY (user_id, need_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (need_id) REFERENCES DietaryNeeds(need_id) ON DELETE CASCADE
+);
+
+-- CHALLENGES
+CREATE TABLE Challenges (
+    challenge_id SERIAL PRIMARY KEY,
+    challenge_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    start_date TIMESTAMP,
+    end_date TIMESTAMP
+);
+
+CREATE TABLE Participate (
+    user_id INT,
+    challenge_id INT,
+    PRIMARY KEY (user_id, challenge_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (challenge_id) REFERENCES Challenges(challenge_id) ON DELETE CASCADE
+);
+
+-- POLLS AND VOTES
+CREATE TABLE Polls (
+    poll_id SERIAL PRIMARY KEY,
+    question VARCHAR(255) NOT NULL,
+    options JSON,
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Vote (
+    user_id INT,
+    poll_id INT,
+    PRIMARY KEY (user_id, poll_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (poll_id) REFERENCES Polls(poll_id) ON DELETE CASCADE
+);
+
+-- DEALS
+CREATE TABLE Deals (
+    deal_id SERIAL PRIMARY KEY,
+    pizza_place_id INT,
+    description TEXT,
+    expiration_date TIMESTAMP,
+    FOREIGN KEY (pizza_place_id) REFERENCES PizzaPlaces(pizza_place_id) ON DELETE CASCADE
+);
+
+-- Optional: Remove if location already in PizzaPlaces
+CREATE TABLE MapCoordinates (
+    pizza_place_id INT PRIMARY KEY,
+    latitude DECIMAL(9, 6),
+    longitude DECIMAL(9, 6),
+    FOREIGN KEY (pizza_place_id) REFERENCES PizzaPlaces(pizza_place_id) ON DELETE CASCADE
+);

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Crusty Critic Deals</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .wrapper {
+      flex: 1;
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .deals-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .deals-header h1 {
+      font-size: 32px;
+      color: #333;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .deals-header h1::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: #F8E0A1;
+      margin: 10px auto 0;
+    }
+    .deals-header p {
+      color: #666;
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .deals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+    }
+    .deal-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .deal-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .deal-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .deal-content {
+      padding: 25px;
+    }
+    .deal-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin: 0 0 15px 0;
+    }
+    .deal-description {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .deal-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    .deal-price {
+      font-size: 24px;
+      font-weight: bold;
+      color: #28a745;
+    }
+    .deal-original-price {
+      font-size: 16px;
+      color: #999;
+      text-decoration: line-through;
+      margin-right: 10px;
+    }
+    .deal-expiry {
+      color: #666;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .deal-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .deal-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .deal-btn.primary {
+      background: #28a745;
+      color: white;
+    }
+    .deal-btn.secondary {
+      background: #f8f9fa;
+      color: #333;
+    }
+    .deal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .footer {
+      background-color: #F8E0A1;
+      text-align: center;
+      padding: 30px 0;
+      margin-top: auto;
+    }
+    .footer img {
+      width: 120px;
+      height: auto;
+      margin-top: 15px;
+      transition: transform 0.3s ease;
+    }
+    .footer img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div id="header"></div>
+  
+  <div class="wrapper">
+    <div class="deals-header">
+      <h1>Active Deals</h1>
+      <p>Discover the best deals and discounts available at Crusty Critic!</p>
+    </div>
+    <div class="deals-grid">
+      <div class="deal-card">
+        <img src="https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg" alt="Buy 1 Get 1 Free Slice" class="deal-image">
+        <div class="deal-content">
+          <h2 class="deal-title">Buy 1 Get 1 Free Slice</h2>
+          <p class="deal-description">Enjoy a delicious slice of pizza for free when you buy one!</p>
+          <div class="deal-meta">
+            <span class="deal-price">$5.99</span>
+            <span class="deal-expiry">Expires: 30/04/2024</span>
+          </div>
+          <div class="deal-actions">
+            <button class="deal-btn primary">Buy Now</button>
+          </div>
+        </div>
+      </div>
+      <div class="deal-card">
+        <img src="https://cdn.pixabay.com/photo/2015/04/08/13/13/food-712665_1280.jpg" alt="20% Off All Deep-Dish Pizzas" class="deal-image">
+        <div class="deal-content">
+          <h2 class="deal-title">20% Off All Deep-Dish Pizzas</h2>
+          <p class="deal-description">Get 20% off all deep-dish pizzas. Limited time offer!</p>
+          <div class="deal-meta">
+            <span class="deal-original-price">$15.99</span>
+            <span class="deal-price">$12.79</span>
+            <span class="deal-expiry">Expires: 30/04/2024</span>
+          </div>
+          <div class="deal-actions">
+            <button class="deal-btn primary">Buy Now</button>
+          </div>
+        </div>
+      </div>
+      <div class="deal-card">
+        <img src="https://cdn.pixabay.com/photo/2017/01/22/19/20/pizza-2000614_1280.jpg" alt="Free Drink with Any Large Pie" class="deal-image">
+        <div class="deal-content">
+          <h2 class="deal-title">Free Drink with Any Large Pie</h2>
+          <p class="deal-description">Get a free drink with any large pizza purchase.</p>
+          <div class="deal-meta">
+            <span class="deal-price">$12.99</span>
+            <span class="deal-expiry">Expires: 30/04/2024</span>
+          </div>
+          <div class="deal-actions">
+            <button class="deal-btn primary">Buy Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">
+    Crusty Critic Capstone Project<br/>
+    <img src="CrustyCriticLogo.png" alt="Crusty Critic Logo"/>
+  </footer>
+  <script type="module">
+    import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+    
+    // Add header styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = headerStyles;
+    document.head.appendChild(styleSheet);
+    
+    // Add header HTML
+    document.getElementById('header').innerHTML = getHeaderHTML();
+    
+    // Initialize header
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeHeader();
+    });
+    
+    // Make logout function globally available
+    window.logout = logout;
+  </script>
+</body>
+</html>

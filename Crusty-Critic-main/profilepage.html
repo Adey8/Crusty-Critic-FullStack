@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crusty Critic Profile</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #F8E0A1;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .nav-left {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+    .nav-right {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .nav a {
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 8px 15px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .nav a:hover {
+      background-color: rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .nav button {
+      background: none;
+      border: none;
+      color: #007bff;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 15px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .nav button:hover {
+      background-color: rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .nav .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav .user-info .profile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+    .nav .user-info .profile-icon:hover {
+      transform: scale(1.1);
+    }
+    .nav .user-info a {
+      color: #007bff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+    .wrapper {
+      flex: 1;
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 30px;
+    }
+    .profile-container {
+      display: flex;
+      gap: 30px;
+      width: 100%;
+    }
+    .profile-sidebar {
+      width: 250px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 25px;
+      height: fit-content;
+    }
+    .profile-sidebar h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sidebar-nav button {
+      width: 100%;
+      padding: 12px 20px;
+      border: none;
+      background: none;
+      text-align: left;
+      font-size: 16px;
+      color: #333;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sidebar-nav button:hover {
+      background-color: rgba(248, 224, 161, 0.2);
+      transform: translateX(5px);
+    }
+    .sidebar-nav button.active {
+      background-color: #F8E0A1;
+      color: #333;
+      font-weight: 500;
+    }
+    .profile-content {
+      flex: 1;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    .profile-content h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: bold;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    .profile-avatar:hover {
+      transform: scale(1.05);
+    }
+    .profile-info {
+      flex: 1;
+    }
+    .profile-name {
+      font-size: 28px;
+      color: #333;
+      margin: 0 0 10px 0;
+    }
+    .profile-email {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+    .profile-stats {
+      display: flex;
+      gap: 30px;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+    .stat-label {
+      color: #666;
+      font-size: 14px;
+    }
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .review-item {
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .review-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .review-place {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+    .review-rating {
+      color: #28a745;
+      font-weight: bold;
+    }
+    .review-text {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    .review-date {
+      color: #666;
+      font-size: 14px;
+    }
+    .edit-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .form-group label {
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+    }
+    .form-group input {
+      padding: 12px 15px;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .form-group input:focus {
+      border-color: #F8E0A1;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(248, 224, 161, 0.2);
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .form-btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .form-btn.primary {
+      background: #28a745;
+      color: white;
+    }
+    .form-btn.secondary {
+      background: #f8f9fa;
+      color: #333;
+    }
+    .form-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .footer {
+      background-color: #F8E0A1;
+      text-align: center;
+      padding: 30px 0;
+      margin-top: auto;
+    }
+    .footer img {
+      width: 120px;
+      height: auto;
+      margin-top: 15px;
+      transition: transform 0.3s ease;
+    }
+    .footer img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div id="header"></div>
+  
+  <div class="wrapper">
+    <div class="profile-container">
+      <div class="profile-sidebar">
+        <h2>Profile</h2>
+        <div class="sidebar-nav" id="sidebarNav">
+          <button class="active" data-tab="overview">
+            <span>📊</span> Overview
+          </button>
+          <button data-tab="reviews">
+            <span>📝</span> My Reviews
+          </button>
+          <button data-tab="favorites">
+            <span>❤️</span> Favorites
+          </button>
+          <button data-tab="edit">
+            <span>⚙️</span> Edit Profile
+          </button>
+        </div>
+      </div>
+      <div class="profile-content" id="profile-content">
+        <div class="profile-header">
+          <div class="profile-avatar" id="profileAvatar"></div>
+          <div class="profile-info">
+            <h1 class="profile-name" id="profileName"></h1>
+            <div class="profile-email" id="profileEmail"></div>
+            <div class="profile-stats">
+              <div class="stat-item">
+                <div class="stat-value" id="reviewCount">0</div>
+                <div class="stat-label">Reviews</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="favoriteCount">0</div>
+                <div class="stat-label">Favorites</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="challengeCount">0</div>
+                <div class="stat-label">Challenges</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="overviewContent">
+          <h2>Recent Activity</h2>
+          <div class="review-list">
+            <div class="review-item">
+              <div class="review-header">
+                <div class="review-place">Pizza Paradise</div>
+                <div class="review-rating">5/5</div>
+              </div>
+              <div class="review-text">Absolutely amazing! The crust was perfectly crispy, and the toppings were fresh and flavorful.</div>
+              <div class="review-date">April 15, 2024</div>
+            </div>
+            <div class="review-item">
+              <div class="review-header">
+                <div class="review-place">Slice of Heaven</div>
+                <div class="review-rating">4.5/5</div>
+              </div>
+              <div class="review-text">Great pizza with a perfect balance of cheese and sauce. The pepperoni was crispy just how I like it.</div>
+              <div class="review-date">April 10, 2024</div>
+            </div>
+          </div>
+        </div>
+        <div id="reviewsContent" style="display: none;">
+          <h2>My Reviews</h2>
+          <div class="review-list">
+            <!-- Reviews will be loaded here -->
+          </div>
+        </div>
+        <div id="favoritesContent" style="display: none;">
+          <h2>Favorite Pizzerias</h2>
+          <div class="review-list">
+            <!-- Favorites will be loaded here -->
+          </div>
+        </div>
+        <div id="editContent" style="display: none;">
+          <h2>Edit Profile</h2>
+          <form class="edit-form" id="editProfileForm">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" required>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="form-btn secondary">Cancel</button>
+              <button type="submit" class="form-btn primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Crusty Critic Capstone Project<br>
+    <img src="CrustyCriticLogo.png" alt="Crusty Critic Logo">
+  </footer>
+
+  <script type="module">
+    import { getHeaderHTML, headerStyles, initializeHeader, logout } from './modules/header.js';
+    
+    // Add header styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = headerStyles;
+    document.head.appendChild(styleSheet);
+    
+    // Add header HTML
+    document.getElementById('header').innerHTML = getHeaderHTML();
+    
+    // Initialize header
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeHeader();
+    });
+    
+    // Make logout function globally available
+    window.logout = logout;
+    
+    // Rest of your existing scripts
+    document.addEventListener('DOMContentLoaded', async () => {
+      const userInfo = document.getElementById('userInfo');
+      const usernameDisplay = document.getElementById('usernameDisplay');
+      const profileIcon = document.getElementById('profileIcon');
+      const authToken = localStorage.getItem('authToken');
+      
+      if (!authToken) {
+        window.location.href = 'loginpage.html';
+        return;
+      }
+
+      try {
+        // Fetch user profile data
+        const response = await fetch('http://127.0.0.1:3000/api/auth/me', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile data');
+        }
+
+        const user = await response.json();
+        
+        // Update navigation
+        usernameDisplay.textContent = user.username;
+        profileIcon.textContent = user.username.charAt(0).toUpperCase();
+        userInfo.style.display = 'flex';
+
+        // Set profile information
+        document.getElementById('profileName').textContent = user.username;
+        document.getElementById('profileEmail').textContent = user.email;
+        document.getElementById('profileAvatar').textContent = user.username.charAt(0).toUpperCase();
+
+        // Pre-fill edit form
+        document.getElementById('username').value = user.username || '';
+        document.getElementById('email').value = user.email || '';
+
+        // Update stats
+        document.getElementById('reviewCount').textContent = '0';
+        document.getElementById('favoriteCount').textContent = '0';
+        document.getElementById('challengeCount').textContent = '0';
+
+        // If admin, add admin dashboard button
+        if (user.accountType === 'admin' || user.account_type === 'admin') {
+          const sidebarNav = document.getElementById('sidebarNav');
+          const adminBtn = document.createElement('button');
+          adminBtn.innerHTML = '<span>🛠️</span> Admin Dashboard';
+          adminBtn.onclick = () => window.location.href = './adminPages/adminpage.html';
+          sidebarNav.appendChild(adminBtn);
+        }
+
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+       
+      }
+
+      // Tab switching functionality
+      const sidebarButtons = document.querySelectorAll('.sidebar-nav button');
+      const contentSections = {
+        overview: document.getElementById('overviewContent'),
+        reviews: document.getElementById('reviewsContent'),
+        favorites: document.getElementById('favoritesContent'),
+        edit: document.getElementById('editContent')
+      };
+
+      sidebarButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Remove active class from all buttons
+          sidebarButtons.forEach(btn => btn.classList.remove('active'));
+          // Add active class to clicked button
+          button.classList.add('active');
+          
+          // Hide all content sections
+          Object.values(contentSections).forEach(section => {
+            section.style.display = 'none';
+          });
+          
+          // Show selected content section
+          const tab = button.getAttribute('data-tab');
+          contentSections[tab].style.display = 'block';
+        });
+      });
+
+      // Form submission handling
+      const editForm = document.getElementById('editProfileForm');
+      editForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = {
+          username: document.getElementById('username').value,
+          email: document.getElementById('email').value
+        };
+
+        try {
+          console.log('Sending update request with data:', formData);
+          const response = await fetch('http://127.0.0.1:3000/api/auth/me', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(formData)
+          });
+
+          console.log('Response status:', response.status);
+          const responseText = await response.text();
+          console.log('Response text:', responseText);
+
+          if (!response.ok) {
+            throw new Error(`Failed to update profile: ${response.status} ${responseText}`);
+          }
+
+          // Since server only returns success message, use form data to update UI
+          // Update the displayed information
+          document.getElementById('profileName').textContent = formData.username;
+          document.getElementById('profileEmail').textContent = formData.email;
+          document.getElementById('profileAvatar').textContent = formData.username.charAt(0).toUpperCase();
+          
+          // Update navigation
+          usernameDisplay.textContent = formData.username;
+          profileIcon.textContent = formData.username.charAt(0).toUpperCase();
+
+          alert('Profile updated successfully!');
+        } catch (error) {
+          console.error('Error in profile update:', error);
+        }
+      });
+    });
+
+    const GOOGLE_MAPS_API_KEY = 'AIzaSyARR7nOKqhg3FL1S8vJO2FimKDtyVIwum4';
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=places" async defer></script>
+</body>
+</html>
