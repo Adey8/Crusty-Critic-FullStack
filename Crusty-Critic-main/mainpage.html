@@ -515,7 +515,33 @@
       </div>
       <div class="modal-body">
         <div class="place-details" id="placeDetails">
-          <!-- Place details will be inserted here -->
+          <!-- Add rating stars UI above the Write a Review button -->
+          <div id="rating-stars" style="text-align:center; margin-bottom: 15px;">
+            <span class="star" data-value="1" style="font-size: 2em; color: #ccc; cursor: pointer;">&#9733;</span>
+            <span class="star" data-value="2" style="font-size: 2em; color: #ccc; cursor: pointer;">&#9733;</span>
+            <span class="star" data-value="3" style="font-size: 2em; color: #ccc; cursor: pointer;">&#9733;</span>
+            <span class="star" data-value="4" style="font-size: 2em; color: #ccc; cursor: pointer;">&#9733;</span>
+            <span class="star" data-value="5" style="font-size: 2em; color: #ccc; cursor: pointer;">&#9733;</span>
+            <div style="font-size: 14px; color: #b8860b; margin-top: 4px;">Select your rating</div>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <div style="color: #28a745; font-weight: bold; margin-bottom: 10px;">
+              ${place.rating ? '⭐ ' + place.rating.toFixed(1) : 'No rating yet'}
+            </div>
+            <p style="color: #666; margin: 5px 0;">
+              <i class="fas fa-map-marker-alt"></i> ${place.address || 'Address not available'}
+            </p>
+            ${place.description ? `
+              <p style="color: #555; margin: 10px 0;">
+                ${place.description}
+              </p>
+            ` : ''}
+          </div>
+          <button onclick="window.location.href='reviewpage.html?pizzaPlaceId=${place.id}'" 
+                  style="background: #F8E0A1; border: none; padding: 10px 20px; 
+                         border-radius: 4px; cursor: pointer; color: #b8860b; font-weight: bold;">
+            Write a Review
+          </button>
         </div>
         <div class="place-reviews" id="placeReviews">
           <!-- Reviews will be inserted here -->
@@ -735,6 +761,15 @@
 
         // Set place details
         placeDetails.innerHTML = `
+          <!-- Add rating stars UI above the Write a Review button -->
+          <div id="rating-stars" style="text-align:center; margin-bottom: 15px;">
+            <span class="star" data-value="1" style="font-size: 2em; color: #ccc; cursor: pointer;">&#9733;</span>
+            <span class="star" data-value="2" style="font-size: 2em; color: #ccc; cursor: pointer;">&#9733;</span>
+            <span class="star" data-value="3" style="font-size: 2em; color: #ccc; cursor: pointer;">&#9733;</span>
+            <span class="star" data-value="4" style="font-size: 2em; color: #ccc; cursor: pointer;">&#9733;</span>
+            <span class="star" data-value="5" style="font-size: 2em; color: #ccc; cursor: pointer;">&#9733;</span>
+            <div style="font-size: 14px; color: #b8860b; margin-top: 4px;">Select your rating</div>
+          </div>
           <div style="margin-bottom: 20px;">
             <div style="color: #28a745; font-weight: bold; margin-bottom: 10px;">
               ${place.rating ? '⭐ ' + place.rating.toFixed(1) : 'No rating yet'}
@@ -973,7 +1008,7 @@
         return;
       }
       pizzaList.innerHTML = places.map(place => `
-        <div class="pizza-card">
+        <div class="pizza-card" data-name="${(place.name || '').toLowerCase()}" data-description="${(place.description || '').toLowerCase()}">
           <div class="pizza-info">
             <div class="pizza-name">${place.name}</div>
             <div class="pizza-rating">
@@ -1042,21 +1077,65 @@
 
       // Add search button functionality
       document.querySelector('.search-btn').addEventListener('click', () => {
-        const query = document.querySelector('.search-input').value.trim();
-        if (query) {
-          fetchAndDisplaySearchedPizzaPlaces(query);
-        } else {
-          fetchAndDisplayAllPizzaPlaces();
-        }
+        // Only filter the pizza list in the sidebar
+        filterPizzaListBySearch();
       });
 
       // Optional: Enter key triggers search
       document.querySelector('.search-input').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
-          document.querySelector('.search-btn').click();
+          filterPizzaListBySearch();
         }
       });
+
+      // Also filter as user types (optional, for live filtering)
+      document.querySelector('.search-input').addEventListener('input', () => {
+        filterPizzaListBySearch();
+      });
     });
+
+    // Add interactivity for rating stars in modal
+    document.addEventListener('DOMContentLoaded', () => {
+      // ...existing code...
+      const stars = document.querySelectorAll('#rating-stars .star');
+      let selectedRating = 0;
+      stars.forEach(star => {
+        star.addEventListener('mouseover', function () {
+          const val = parseInt(this.getAttribute('data-value'));
+          stars.forEach((s, i) => {
+            s.style.color = (i < val) ? '#FFD700' : '#ccc';
+          });
+        });
+        star.addEventListener('mouseout', function () {
+          stars.forEach((s, i) => {
+            s.style.color = (i < selectedRating) ? '#FFD700' : '#ccc';
+          });
+        });
+        star.addEventListener('click', function () {
+          selectedRating = parseInt(this.getAttribute('data-value'));
+          stars.forEach((s, i) => {
+            s.style.color = (i < selectedRating) ? '#FFD700' : '#ccc';
+          });
+          // Optionally, store selectedRating for use in review submission
+          window.selectedReviewRating = selectedRating;
+        });
+      });
+    });
+
+    // Add client-side filtering for pizza list
+    function filterPizzaListBySearch() {
+      const searchValue = document.querySelector('.search-input').value.trim().toLowerCase();
+      const pizzaCards = document.querySelectorAll('#pizza-list .pizza-card');
+      pizzaCards.forEach(card => {
+        const name = card.getAttribute('data-name') || '';
+        const desc = card.getAttribute('data-description') || '';
+        if (!searchValue || name.includes(searchValue) || desc.includes(searchValue)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
   </script>
 </body>
 
