@@ -94,7 +94,7 @@
 <body>
     <div id="header"></div>
     <div class="signup-container">
-        <a href="homepage.html"><img src="CrustyCriticLogo.png" alt="Crusty Critic Logo" class="logo"></a>
+        <a href="mainpage.html"><img src="CrustyCriticLogo.png" alt="Crusty Critic Logo" class="logo"></a>
         <div class="signup-box">
             <h2>Sign Up</h2>
             <div class="error-message" id="errorMessage"></div>
@@ -179,8 +179,8 @@
                 // Store the token in localStorage
                 localStorage.setItem('authToken', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                // Redirect to homepage on successful registration
-                window.location.href = 'homepage.html';
+                // Redirect to mainpage on successful registration
+                window.location.href = 'mainpage.html';
             } catch (error) {
                 errorMessage.textContent = error.message;
                 errorMessage.style.display = 'block';
