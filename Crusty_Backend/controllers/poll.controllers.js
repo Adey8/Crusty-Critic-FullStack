@@ -76,7 +76,7 @@ exports.createPoll = async (req, res) => {
     
     // Validate input
     if (!title || !options || !Array.isArray(options) || options.length < 2 || !question) {
-      return res.status(400).json({ message: 'Title, question, and at least 2 options are required' });
+      return res.status(400).json({ message: 'title, question, and at least 2 options are required' });
     }
 
     // Validate challenge_id exists

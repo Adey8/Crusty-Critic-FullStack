@@ -11,13 +11,13 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Check if the database exists
-if psql -lqt | cut -d \| -f 1 | grep -qw pizza_db; then
-    echo "Database pizza_db already exists. Dropping it..."
-    dropdb pizza_db
+if psql -lqt | cut -d \| -f 1 | grep -qw crustydb; then
+    echo "Database crustydb already exists. Dropping it..."
+    dropdb crustydb
 fi
 
 # Create and initialize the database
-echo "Creating and initializing pizza_db..."
+echo "Creating and initializing crustydb..."
 psql -U postgres -f "$PROJECT_DIR/database/init.sql"
 
 echo "Database setup complete!" 

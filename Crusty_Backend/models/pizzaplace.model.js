@@ -79,7 +79,9 @@ module.exports = (sequelize) => {
     modelName: 'PizzaPlace',
     tableName: 'pizza_places',
     timestamps: true,  // Enable createdAt and updatedAt
-    underscored: true   // Use snake_case columns
+    underscored: true,   // Use snake_case columns
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
   
 

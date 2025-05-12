@@ -33,6 +33,14 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Error handler for invalid JSON
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    return res.status(400).json({ error: 'Invalid JSON' });
+  }
+  next();
+});
+
 // Public routes
 app.use('/api/auth', authRoutes);
 
@@ -52,10 +60,22 @@ app.use('/api/pizza-types', auth, pizzaTypeRoutes);
 app.use('/api/pizza-place-toppings', auth, pizzaPlaceToppingsRoutes);
 app.use('/api/participate', auth, participateRoutes);
 app.use('/api/challenges', auth, challengesRoutes);
+
 //a test route to check if the server is running
 app.get('/api', (req, res) => {
   res.status(200).json({ message: 'Server is running!' });
 });
+
+// Health check route for DB connectivity
+app.get('/api/health', async (req, res) => {
+  try {
+    await db.sequelize.authenticate();
+    res.status(200).json({ status: 'ok', db: 'connected' });
+  } catch (err) {
+    res.status(500).json({ status: 'error', db: 'disconnected', error: err.message });
+  }
+});
+
 // Sync database and create tables if they don't exist
 db.sequelize.sync({ force: false })
   .then(() => {
@@ -64,6 +84,7 @@ db.sequelize.sync({ force: false })
   .catch(err => {
     console.error('Error syncing database:', err);
   });
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error details:', {

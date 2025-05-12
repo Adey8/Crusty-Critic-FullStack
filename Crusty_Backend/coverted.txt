@@ -1,7 +1,7 @@
 -- Create database (only run if not already created)
-CREATE DATABASE pizza_db;
+CREATE DATABASE crusty-db;
 
--- In pgAdmin: switch to "pizza_db" manually before running the rest
+-- In pgAdmin: switch to "crusty-db" manually before running the rest
 
 -- USERS
 CREATE TABLE Users (
