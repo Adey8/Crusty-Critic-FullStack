@@ -1,3 +1,4 @@
+import { baseUrl } from '../config.js';
 // Header HTML template
 export function getHeaderHTML() {
     return `
@@ -115,7 +116,7 @@ export function initializeHeader() {
     const profileIcon = document.getElementById('profileIcon');
     const authButtons = document.getElementById('authButtons');
     const authToken = localStorage.getItem('authToken');
-    
+
     if (!authToken) {
         userInfo.style.display = 'none';
         authButtons.style.display = 'flex';
@@ -123,7 +124,7 @@ export function initializeHeader() {
     }
 
     // Fetch user profile data from /api/auth/me
-    fetch('http://localhost:3000/api/auth/me', {
+    fetch(`${baseUrl}/auth/me`, {
         headers: {
             'Authorization': `Bearer ${authToken}`
         }

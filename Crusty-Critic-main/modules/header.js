@@ -1,4 +1,6 @@
+import { baseUrl } from "../config.js";
 // Header HTML template
+
 export function getHeaderHTML() {
     return `
     <nav class="nav">
@@ -123,7 +125,7 @@ export function initializeHeader() {
     }
 
     // Fetch user profile data from /api/auth/me
-    fetch('http://localhost:3000/api/auth/me', {
+    fetch(`${baseUrl}/auth/me`, {
         headers: {
             'Authorization': `Bearer ${authToken}`
         }
