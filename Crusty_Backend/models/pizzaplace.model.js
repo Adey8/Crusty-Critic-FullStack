@@ -69,10 +69,26 @@ module.exports = (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: true
     },
+    location_lat: {
+      type: DataTypes.DECIMAL(9, 6),
+      allowNull: true
+    },
+    location_lng: {
+      type: DataTypes.DECIMAL(9, 6),
+      allowNull: true
+    },
     average_rating: {
       type: DataTypes.DECIMAL(3, 2),
       allowNull: false,
       defaultValue: 0
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     }
   }, {
     sequelize,
